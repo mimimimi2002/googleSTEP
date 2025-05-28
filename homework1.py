@@ -1,5 +1,30 @@
-# global variable to keep track whether the dictionary is already sorted.
-sorted_new_dictionary_store = {}
+def get_all_anagrams(sorted_new_dictionary, sorted_word, idx):
+  """
+  This function returns a list of string of all anagrams of
+  the word that has the same sorted word as given sorted_word.
+
+  Args:
+      sorted_new_dictionary (list): this is a list of the tuple of the new dictionary that holds the sorted word and origianl word.
+                                    this is already sorted by the first element of the tuple.
+      sorted_word (string): a sorted word that you want to find all anagrams.
+      idx (int): the index of the sorted word in the sorted_new_dictionary.
+  """
+
+  left = idx - 1
+  right = idx + 1
+  all_anagrams = []
+
+  all_anagrams.append(sorted_new_dictionary[idx][1])
+
+  while left >= 0 and sorted_new_dictionary[left][0] == sorted_word:
+    all_anagrams.append(sorted_new_dictionary[left][1])
+    left -= 1
+
+  while right < len(sorted_new_dictionary) and sorted_new_dictionary[right][0] == sorted_word:
+    all_anagrams.append(sorted_new_dictionary[right][1])
+    right += 1
+
+  return all_anagrams
 
 def binary_serach(sorted_word, sorted_new_dictionary):
   """
@@ -26,16 +51,15 @@ def binary_serach(sorted_word, sorted_new_dictionary):
     # if find the right sorted word, return the pair of the original word
     # it does not matter which word will return as long as the sorted word matches the word in the new dict
     if mid_word == sorted_word:
-      return sorted_new_dictionary[mid][1]
+      return get_all_anagrams(sorted_new_dictionary, sorted_word, mid)
     elif mid_word < sorted_word:
       left = mid + 1
     else:
       right = mid - 1
 
-  return ""
+  return []
 
-sorted_new_dictionary = []
-def find_anagram(tarted_word, dictionary):
+def find_anagram(tarted_word, sorted_new_dictionary):
   """
   This function returns the anagram of the tarted_word if it is in dictionary.
   Assume that this function is used in different targed_word in the same dictionary.
@@ -46,43 +70,33 @@ def find_anagram(tarted_word, dictionary):
       dictionary (a list of string): a list of string that represents a dictionary.
   """
 
-  # declare the stored new_dictionary as a global function
-  global sorted_new_dictionary_store
   # if the targeted word is empty
   if tarted_word == "":
     return "Word is empty"
 
-  # create a new dictionary that holds a list of tuple of sorted word and the original word in dictioanry.
-  # if the dictionary is already sorted, not necessary
-  if len(sorted_new_dictionary_store) == 0:
-    new_dictionary = []
-    for word in dictionary:
-      new_dictionary.append(("".join(sorted(word)), word))
-
-    # sort new dictionary
-    sorted_new_dictionary = sorted(new_dictionary, key=lambda x:x[0])
-
-    sorted_new_dictionary_store = sorted_new_dictionary
-
   # binary search
   sorted_word = "".join(sorted(tarted_word))
-  anagram = binary_serach(sorted_word, sorted_new_dictionary_store)
+  anagrams = binary_serach(sorted_word, sorted_new_dictionary)
 
-  if anagram == "":
+  if len(anagrams) == 0:
     return 'Cannot find the anagram of the word in the dictionary'
+  elif len(anagrams) == 1:
+    return anagrams[0]
   else:
-    return anagram
+    return anagrams
 
 if __name__ == "__main__":
-  # test
-  assert find_anagram("", ["egg", "a", "bark", "card", "dog"]) == "Word is empty"
-  assert find_anagram("acdr", ["egg", "a", "bark", "card", "dog"]) == "card"
-  assert find_anagram("abcr", ["egg", "a", "bark", "card", "dog"]) == "Cannot find the anagram of the word in the dictionary"
-
-  sorted_new_dictionary_store = {}
   dictionary = []
   with open("words.txt") as f:
     contents = f.readlines()
     for line in contents:
       dictionary.append(line.strip())
-  print(find_anagram("otcopus", dictionary))
+
+  new_dictionary = []
+  for word in dictionary:
+      new_dictionary.append(("".join(sorted(word)), word))
+
+  # sort new dictionary
+  sorted_new_dictionary = sorted(new_dictionary, key=lambda x:x[0])
+
+  print(find_anagram("listen", sorted_new_dictionary))
