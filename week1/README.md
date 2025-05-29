@@ -42,15 +42,21 @@ So the total runtime will be
 
 O(N * L * logL + N * logN + Q * M * logM * logN)
 
+### more effective way
+We created a sorted new dictionary, but if you want to find the sorted_word and get the origianl word,
+store them in dictionary and use O(1) to find the correspoinding origianl word.
+In this way, we don't need to do binary search.
+
 ### test
-We will test in the samll dictionary whose length is less than 10.
-However this function is assuming that you use the same dictionary and they will only sort the
+We will test in the small dictionary whose length is less than 10.
+However, this function is assuming that you use the same dictionary and they will only sort the
 dictionary once.
 
 We will create a new class that can test the different dictionary and also sort it once no
 matter how many request you do.
 
 ## homework2
+### runtime
 This time, we will use a part of the letters in the targeted_word and find the anagram that has the highest score.
 Fisrt we can make use of the homework1's algorithm.
 
@@ -63,8 +69,25 @@ O(N * L * logL + N * logN + Q * 2^M * M * logM * logN)
 Considering that anagrams can be created as long as the targeted_word has enough letters.
 So this time, we will use the letters dictionary for both targeted_word and words in dictionary.
 
+First, we create a pair of letters dictionary and the original word for each word in dictionary.(O(L * N))
+
 We create a dictionary for the letters in targeted_word(O(M))
 
-Then we create a pair of letters dictionary and the original word for each word in dictionary.(O(L * N))
+Then we will compare the letters in targeted_word and each word in dictionary and check if it is a subset of the targeted_word. If so, we will get the score and store to list. (O(M * N))
 
-Then we will compare the letters in targeted_word and each word in dictionary and check it is a subset of the targeted_word
+After getting the all possible anagrams and their score, choose the best anagram and its score.
+(O(length_longest_possible_anagram))
+
+The total runtime will be
+
+O(L * N + Q * (M + M * N + length_longest_possible_anagram))
+
+### more efficient way
+Is it necessary to hold all the possible anagrams to get the highest score?
+
+If the dictionary is sorted by score, the first anagrams we find is guaranteed to have
+the highest score.
+
+the runtime will be
+
+O(L * N + N * logN + Q * (M + M * (the times to find the highest score(most is way less than N))))
