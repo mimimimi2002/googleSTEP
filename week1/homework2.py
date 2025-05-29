@@ -86,6 +86,8 @@ def find_best_anagram(targeted_word, letter_word_score_all_by_score):
   Returns the best anagram and its score.
   If there is no matching anagram, return "", and 0
 
+  If the targeted_word is empty, returns "Word is empty"
+
   Args:
       targeted_word (string): a string of word
       letter_word_score_all_by_score (list): a list of tuples of letter dictionary and word and its score in the dictionary.
@@ -93,8 +95,12 @@ def find_best_anagram(targeted_word, letter_word_score_all_by_score):
 
   Returns:
       str, int: the best anagram and its score. If there is no matching anagram, return "", and 0
+      string : if the targeted_word is empty, returns "Word is empty"
 
   """
+  if targeted_word == "":
+    return "Word is empty"
+
   letter_target = count_letter(targeted_word)
 
   for letter_word_score_pair in letter_word_score_all_by_score:
