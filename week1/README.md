@@ -158,6 +158,12 @@ To compare these, I created random 100 meaningful words with thess three
 files, (use the same test word files), and calculate the toatl runtime.
 
 #### Result
+| Method               | Total runtime (sec)   |
+|----------------------|-------------|
+| Pure Python          | 9.30884     |
+| Pure C++             | 4.67243     |
+| Python + C++ Module  | 6.75457     |
+
 1. use only python: 9.308848857879639
 `cd runtime`
 `python anagramfinder_python.py`
