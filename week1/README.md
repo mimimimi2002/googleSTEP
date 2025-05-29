@@ -9,7 +9,7 @@
 | homework1_test.py     | Test script for homework1                        |python homework1_test.py|
 | homework2.py          | Main code for homework2                          |python homework2.py [-h] -t TARGET -a ANSWER|
 | homework2_test.py     | Test script for homework2                        |python homework2_test.py|
-| library               | Library using C++ for homework1                  |
+| library               | Make a python library using C++ for homework1                  |
 | runtime_calculator    | Calculate each runtimes for python, C++, C++ and python|
 
 # Homework1
