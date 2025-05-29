@@ -174,7 +174,7 @@ setup(
 
 2. Pure C++
 
-3. Python + C++ Module
+3. Python using C++ Module
 
 To compare these, I created random 100 meaningful words with these three
 files([random_words.txt](./runtime_calculator/random_words.txt)), and calculate the toatl runtime.
