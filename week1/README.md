@@ -7,8 +7,8 @@
 | homework1.py          | Main code for homework1                          |python homework1.py [-h] -w WORD|
 | homework1_class.py    | Contains a class with functions used in homework1|
 | homework1_test.py     | Test script for homework1                        |python homework1_test.py|
-| homework2.py          | Main code for homework2                          |
-| homework2_test.py     | Test script for homework2                        |homework2.py [-h] -t TARGET -a ANSWER|
+| homework2.py          | Main code for homework2                          |python homework2.py [-h] -t TARGET -a ANSWER|
+| homework2_test.py     | Test script for homework2                        |python homework2_test.py|
 | library               | Library using c++ for homework1                  |
 | runtime_calculator    | Calculate each runtimes for python, c++, c++ and python|
 
@@ -185,7 +185,7 @@ files([random_words.txt](./runtime_calculator/random_words.txt)), and calculate 
 
 `cd runtime_calculator`
 
-`python anagramfinder_python.py`
+`python anagramfinder_pure_python.py`
 
 2. Pure C++
 
@@ -195,11 +195,11 @@ files([random_words.txt](./runtime_calculator/random_words.txt)), and calculate 
 
 `./main`
 
-3. Python + C++ Module
+3. Python using C++ Module
 
 `cd runtime_calculator`
 
-`python anagramfinder.py`
+`python anagramfinder_cpp_module.py`
 
 #### Runtime Comparison by Method
 ![RuntimeResult](./runtime_result.jpg)
