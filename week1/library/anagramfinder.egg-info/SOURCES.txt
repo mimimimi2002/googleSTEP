@@ -1,6 +1,0 @@
-anagramfinder.cpp
-setup.py
-anagramfinder.egg-info/PKG-INFO
-anagramfinder.egg-info/SOURCES.txt
-anagramfinder.egg-info/dependency_links.txt
-anagramfinder.egg-info/top_level.txt
