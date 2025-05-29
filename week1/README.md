@@ -137,6 +137,9 @@ PYBIND11_MODULE(anagramfinder, m) {
 
 3. create setup.py
 ```
+from setuptools import setup, Extension
+import pybind11
+
 ext_modules = [
     Extension(
         "anagramfinder",
@@ -151,6 +154,10 @@ setup(
     name="anagramfinder",
     version="0.1",
     ext_modules=ext_modules,
+    include_package_data=True,
+    package_data={
+        "": ["words.txt"],
+    },
 )
 ```
 4. `pip install pybind11`
