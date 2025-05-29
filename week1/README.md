@@ -1,6 +1,18 @@
 # googleSTEP
 
-## homework1
+## File Descriptions
+
+| File name, folder name           | Usage                                            |
+|-----------------------|-------------|
+| homework1.py          | Main code for homework1                          |
+| homework1_class.py    | Contains a class with functions used in homework1|
+| homework1_test.py     | Test script for homework1                        |
+| homework1.py          | Main code for homework2                          |
+| homework1_test.py     | Test script for homework2                        |
+| library               | Library using c++ for homework1                  |
+| runtime_calculator    | Calculate each runtimes for python, c++, c++ + python|
+
+# homework1
 ### runtime
 Given the target_word and dictionary, find the anagram of the target_word in dictionary.
 
