@@ -12,8 +12,8 @@
 | library               | Library using c++ for homework1                  |
 | runtime_calculator    | Calculate each runtimes for python, c++, c++ and python|
 
-# homework1
-### time complexity
+# Homework1
+### Time complexity
 Given the target_word and dictionary, find the anagram of the target_word in dictionary.
 
 M: target_word's length
@@ -54,12 +54,12 @@ So the total runtime will be
 
 O(N * L * logL + N * logN + Q * M * logM * logN)
 
-### more effective algorithm
+### More effective algorithm
 We created a sorted new dictionary, but if you want to find the sorted_word and get the origianl word,
 store them in dictionary and use O(1) to find the correspoinding origianl word.
 In this way, we don't need to do binary search.
 
-### test
+### Test
 We will test in the small dictionary whose length is less than 10.
 However, this function is assuming that you use the same dictionary and they will only sort the
 dictionary once.
@@ -67,8 +67,8 @@ dictionary once.
 We will create a new class that can test the different dictionary and also sort it once no
 matter how many request you do.
 
-## homework2
-### time complexity
+## Homework2
+### Time complexity
 This time, we will use a part of the letters in the targeted_word and find the anagram that has the highest score.
 Fisrt we can make use of the homework1's algorithm.
 
@@ -94,7 +94,7 @@ The total runtime will be
 
 O(L * N + Q * (M + M * N + length_longest_possible_anagram))
 
-### more efficient algorithm
+### More efficient algorithm
 Is it necessary to hold all the possible anagrams to get the highest score?
 
 If the dictionary is sorted by score, the first anagrams we find is guaranteed to have
