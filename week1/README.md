@@ -91,3 +91,53 @@ the highest score.
 the runtime will be
 
 O(L * N + N * logN + Q * (M + M * (the times to find the highest score(most is way less than N))))
+
+## library
+Considering that c++ or c language runs faster than python, we created a library that can be
+imported by python file and compare runtime for this.
+
+### To make it a library
+1. use c++ to write the hw1 using class.
+
+2. add code in cpp file.
+```
+PYBIND11_MODULE(anagramfinder, m) {
+    py::class_<AnagramFinder>(m, "AnagramFinder")
+        .def(py::init<std::vector<std::string>>())
+        .def(py::init<const std::string&>())
+        .def("find_anagram", &AnagramFinder::find_anagram);
+}
+```
+
+3. create setup.py
+```
+ext_modules = [
+    Extension(
+        "anagramfinder",
+        ["anagramfinder.cpp"],
+        include_dirs=[pybind11.get_include()],
+        language="c++",
+        extra_compile_args=['-std=c++11'],
+    ),
+]
+
+setup(
+    name="anagramfinder",
+    version="0.1",
+    ext_modules=ext_modules,
+)
+```
+
+4. `pip install -e .`
+
+5. `python setup.py build`
+
+6. `python setup.py install`
+
+7. then be able to use import anagramfinder in main.py
+
+### C++ vs python
+コンパイル言語 vs インタプリタ言語
+C++はコンパイル言語で、コードがあらかじめマシン語に変換されているため、CPUが直接理解して高速に実行できる。
+
+Pythonはインタプリタ言語で、実行時に1行ずつ読み込んで処理しているため、C++に比べてオーバーヘッドが大きくなる。
