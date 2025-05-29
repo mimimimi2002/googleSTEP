@@ -122,7 +122,7 @@ if __name__ == "__main__":
     for line in content:
       dictionary.append(line.strip())
 
-  # get the list of a pair of letter count and its original word from dictionary
+  # get the list of tupels of letter count and its original word from dictionary
   letter_word_score_all_by_score = letter_word_score_by_score(dictionary)
 
   target_file = sys.argv[1]
