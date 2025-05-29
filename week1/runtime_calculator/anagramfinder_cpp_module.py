@@ -1,5 +1,6 @@
 import time
 import anagramfinder
+from importlib.resources import files
 
 test_words = []
 with open("random_words.txt" ,'r') as f:
@@ -11,7 +12,8 @@ runtimes = []
 for word in test_words:
   start = time.time()
   # Create instance from dictionary file
-  finder = anagramfinder.AnagramFinder("words.txt")
+  dict_path = files(anagramfinder).joinpath("words.txt")
+  finder = anagramfinder.AnagramFinder(str(dict_path))
 
   # Find anagrams
   print(finder.find_anagram(word))
