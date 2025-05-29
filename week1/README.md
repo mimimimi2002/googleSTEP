@@ -137,14 +137,17 @@ setup(
 7. then be able to use import anagramfinder in main.py
 
 ### C++ vs python
-コンパイル言語 vs インタプリタ言語
-C++はコンパイル言語で、コードがあらかじめマシン語に変換されているため、CPUが直接理解して高速に実行できる。
+Compiled languages vs. Interpreted languages
 
-Pythonはインタプリタ言語で、実行時に1行ずつ読み込んで処理しているため、C++に比べてオーバーヘッドが大きくなる。
+C++ is a compiled language, meaning the code is converted into machine language ahead of time. As a result, the CPU can understand and execute it directly, making it very fast.
+
+Python is an interpreted language, meaning it reads and processes the code line by line at runtime. This introduces more overhead compared to C++, resulting in slower performance.
 
 ### run C++ file
 `cd library`
+
 `g++ -O3 -std=c++11 main.cpp -o main`
+
 `./main`
 
 ### compare efficiency for runtime for three files.
@@ -165,16 +168,20 @@ files, (use the same test word files), and calculate the toatl runtime.
 | Python + C++ Module  | 6.75457     |
 
 1. use only python: 9.308848857879639
-`cd runtime`
+`cd runtime_calculator`
+
 `python anagramfinder_python.py`
 
 2. use only cpp file: 4.67243
-`cd runtime`
+`cd runtime_calculator`
+
 `g++ -O3 -std=c++11 anagramfinder.cpp -o main`
+
 `./main`
 
 3. use cpp file as library in python files: 6.754573106765747
-`cd runtime`
+`cd runtime_calculator`
+
 `python anagramfinder.py`
 
 ### Todo
