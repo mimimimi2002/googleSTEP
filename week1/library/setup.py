@@ -15,4 +15,8 @@ setup(
     name="anagramfinder",
     version="0.1",
     ext_modules=ext_modules,
+    include_package_data=True,
+    package_data={
+        "": ["words.txt"],
+    },
 )

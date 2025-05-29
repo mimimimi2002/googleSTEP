@@ -1,8 +1,10 @@
+from importlib.resources import files
 import anagramfinder
-print(anagramfinder.__file__)
 
 # Create instance from dictionary file
-finder = anagramfinder.AnagramFinder("words.txt")
+
+dict_path = files(anagramfinder).joinpath("words.txt")
+finder = anagramfinder.AnagramFinder(str(dict_path))
 
 # Find anagrams
 print(finder.find_anagram("silent"))
