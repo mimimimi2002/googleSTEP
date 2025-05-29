@@ -1,4 +1,4 @@
-class Anagram:
+class AnagramFinder:
   def __init__(self, dictionary):
     self.new_dictionary = {}
     self.create_new_dictionary(dictionary)
