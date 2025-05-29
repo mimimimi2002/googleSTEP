@@ -10,7 +10,7 @@
 | homework1.py          | Main code for homework2                          |
 | homework1_test.py     | Test script for homework2                        |
 | library               | Library using c++ for homework1                  |
-| runtime_calculator    | Calculate each runtimes for python, c++, c++ + python|
+| runtime_calculator    | Calculate each runtimes for python, c++, c++ and python|
 
 # homework1
 ### runtime
