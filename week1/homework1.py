@@ -1,4 +1,6 @@
 import sys
+import argparse
+
 def create_new_dictionary(dictionary):
   """
   Given a list of string, returns a dictionary of a sorted word as a key and the list of the origianl
@@ -54,6 +56,13 @@ def find_anagram(targeted_word, new_dictionary):
     return anagrams
 
 if __name__ == "__main__":
+
+  parser = argparse.ArgumentParser(description="Homework1 script for word processing")
+  parser.add_argument("-w", "--word", required=True, help="Targeted word to process")
+
+  args = parser.parse_args()
+  targeted_word = args.word
+
   dictionary = []
   with open("words.txt") as f:
     contents = f.readlines()
@@ -62,5 +71,5 @@ if __name__ == "__main__":
 
   # create new dictionary with a key of sorted word and a list of origianl words.
   new_dictionary = create_new_dictionary(dictionary)
-  targeted_word = sys.argv[1]
+
   print(find_anagram(targeted_word, new_dictionary))

@@ -1,4 +1,5 @@
 import sys
+import argparse
 
 def letter_word_score_by_score(dictionary):
   """
@@ -115,6 +116,14 @@ def find_best_anagram(targeted_word, letter_word_score_all_by_score):
 
 if __name__ == "__main__":
 
+  parser = argparse.ArgumentParser(description="Homework2 script for word processing")
+  parser.add_argument("-t", "--target", required=True, help="File path of a list of target words")
+  parser.add_argument("-a", "--answer", required=True, help="File path of an answer of the input")
+
+  args = parser.parse_args()
+  target_file = args.target
+  answer_file = args.answer
+
   # get all the words from words.txt
   dictionary = []
   with open("words.txt", 'r') as f:
@@ -124,9 +133,6 @@ if __name__ == "__main__":
 
   # get the list of tupels of letter count and its original word from dictionary
   letter_word_score_all_by_score = letter_word_score_by_score(dictionary)
-
-  target_file = sys.argv[1]
-  answer_file = sys.argv[2]
 
   targeted_words = []
   with open(target_file, 'r') as f:
@@ -142,4 +148,4 @@ if __name__ == "__main__":
       f.write(best_word)
       f.write("\n")
 
-  print(score_sum)
+  print("Total score of the answers: ", score_sum)
