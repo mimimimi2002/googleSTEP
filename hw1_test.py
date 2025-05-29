@@ -1,5 +1,6 @@
 from homework1 import create_new_dictionary
 from homework1 import find_anagram
+from hw1_class import Anagram
 
 def test_find_anagram():
   # test case 1 Basic test
@@ -32,5 +33,18 @@ def test_find_anagram():
   dictioanry = ["egg", "card", "dog", "a", "god"]
   assert find_anagram(targeted_word, create_new_dictionary(dictioanry)) == "Cannot find the anagram of the word in the dictionary"
 
+def test_find_anagram_using_class():
+  anagram1 = Anagram(["egg", "card", "dog", "a"])
+  assert anagram1.find_anagram("acdr") == "card"
+  assert anagram1.find_anagram("zhegg") == "Cannot find the anagram of the word in the dictionary"
+  assert anagram1.find_anagram("") == "Word is empty"
+
+  anagram2 = Anagram([])
+  assert anagram2.find_anagram("egg") == "Cannot find the anagram of the word in the dictionary"
+
+  anagram3 = Anagram(["egg", "card", "dog", "a", "god"])
+  assert anagram3.find_anagram("ogd") == ["dog", "god"]
+
 if __name__ == "__main__":
   test_find_anagram()
+  test_find_anagram_using_class()
