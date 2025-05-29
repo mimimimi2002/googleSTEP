@@ -9,8 +9,8 @@
 | homework1_test.py     | Test script for homework1                        |python homework1_test.py|
 | homework2.py          | Main code for homework2                          |python homework2.py [-h] -t TARGET -a ANSWER|
 | homework2_test.py     | Test script for homework2                        |python homework2_test.py|
-| library               | Library using c++ for homework1                  |
-| runtime_calculator    | Calculate each runtimes for python, c++, c++ and python|
+| library               | Library using C++ for homework1                  |
+| runtime_calculator    | Calculate each runtimes for python, C++, C++ and python|
 
 # Homework1
 ### Time complexity
@@ -104,8 +104,8 @@ the runtime will be
 
 O(L * N + N * logN + Q * (M + M * (the times to find the highest score(most is way less than N))))
 
-## More efficient way in different language
-Considering that c++ or c language runs faster than python, we created a library that can be
+## More efficient way by different language
+Considering that C++ or c language runs faster than python, we created a library that can be
 imported by python file and compare runtime for this.
 
 ### C++ vs python
@@ -122,7 +122,7 @@ Python is an interpreted language, meaning it reads and processes the code line 
 
 `./main`
 
-### Make python library with c++
+### Make python library with C++
 1. use c++ to write the hw1 using class.
 
 2. add code in cpp file.
