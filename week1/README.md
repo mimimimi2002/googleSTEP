@@ -2,13 +2,13 @@
 
 ## File Descriptions
 
-| File name, folder name           | Usage                                            |
-|-----------------------|-------------|
-| homework1.py          | Main code for homework1                          |
+| File name, folder name               | Usage                             | Command |
+|-----------------------|--------------------------------------------------|---------|
+| homework1.py          | Main code for homework1                          |python homework1.py [-h] -w WORD|
 | homework1_class.py    | Contains a class with functions used in homework1|
-| homework1_test.py     | Test script for homework1                        |
-| homework1.py          | Main code for homework2                          |
-| homework1_test.py     | Test script for homework2                        |
+| homework1_test.py     | Test script for homework1                        |python homework1_test.py|
+| homework2.py          | Main code for homework2                          |
+| homework2_test.py     | Test script for homework2                        |homework2.py [-h] -t TARGET -a ANSWER|
 | library               | Library using c++ for homework1                  |
 | runtime_calculator    | Calculate each runtimes for python, c++, c++ and python|
 
@@ -153,12 +153,11 @@ setup(
     ext_modules=ext_modules,
 )
 ```
-
-4. `pip install -e .`
+4. `pip install pybind11`
 
 5. `python setup.py build`
 
-6. `python setup.py install`
+6. `pip install -e .`
 
 7. then be able to use import anagramfinder in main.py
 
