@@ -1,3 +1,4 @@
+import sys
 def create_new_dictionary(dictionary):
   """
   Given a list of string, returns a dictionary of a sorted word as a key and the list of the origianl
@@ -61,5 +62,5 @@ if __name__ == "__main__":
 
   # create new dictionary with a key of sorted word and a list of origianl words.
   new_dictionary = create_new_dictionary(dictionary)
-
-  print(find_anagram("listen", new_dictionary))
+  targeted_word = sys.argv[1]
+  print(find_anagram(targeted_word, new_dictionary))
