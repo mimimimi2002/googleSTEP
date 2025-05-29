@@ -171,16 +171,18 @@ setup(
 3. Python + C++ Module
 
 To compare these, I created random 100 meaningful words with these three
-files((`random_words.txt`)), and calculate the toatl runtime.
+files([random_words.txt](./runtime_calculator/random_words.txt)), and calculate the toatl runtime.
 
 #### How to run
 
 1. Pure Python
+
 `cd runtime_calculator`
 
 `python anagramfinder_python.py`
 
 2. Pure C++
+
 `cd runtime_calculator`
 
 `g++ -O3 -std=c++11 anagramfinder.cpp -o main`
@@ -188,17 +190,12 @@ files((`random_words.txt`)), and calculate the toatl runtime.
 `./main`
 
 3. Python + C++ Module
+
 `cd runtime_calculator`
 
 `python anagramfinder.py`
 
-#### Result
-| Method               | Total runtime (sec)   |
-|----------------------|-------------|
-| Pure Python          | 9.30884     |
-| Pure C++             | 4.67243     |
-| Python + C++ Module  | 6.75457     |
-
+#### Runtime Comparison by Method
 ![RuntimeResult](./runtime_result.jpg)
 
 ### Todo
