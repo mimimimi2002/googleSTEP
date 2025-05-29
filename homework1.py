@@ -43,11 +43,11 @@ def find_anagram(targeted_word, new_dictionary):
 
   # get a list of anagrams
   sorted_word = "".join(sorted(targeted_word))
+  if sorted_word not in new_dictionary:
+    return 'Cannot find the anagram of the word in the dictionary'
   anagrams = new_dictionary[sorted_word]
 
-  if len(anagrams) == 0:
-    return 'Cannot find the anagram of the word in the dictionary'
-  elif len(anagrams) == 1:
+  if len(anagrams) == 1:
     return anagrams[0]
   else:
     return anagrams
