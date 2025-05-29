@@ -1,6 +1,6 @@
 from homework1 import create_new_dictionary
 from homework1 import find_anagram
-from hw1_class import Anagram
+from homework1_class import Anagram
 
 def test_find_anagram():
   # test case 1 Basic test
