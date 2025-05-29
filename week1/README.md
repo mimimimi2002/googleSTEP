@@ -146,3 +146,30 @@ Pythonはインタプリタ言語で、実行時に1行ずつ読み込んで処�
 `cd library`
 `g++ -O3 -std=c++11 main.cpp -o main`
 `./main`
+
+### compare efficiency for runtime for three files.
+1. use only python
+
+2. use only cpp file
+
+3. make a cpp library and use it in python
+
+To compare these, I created random 100 meaningful words with thess three
+files, (use the same test word files), and calculate the toatl runtime.
+
+#### Result
+1. use only python: 9.308848857879639
+`cd runtime`
+`python anagramfinder_python.py`
+
+2. use only cpp file: 4.67243
+`cd runtime`
+`g++ -O3 -std=c++11 anagramfinder.cpp -o main`
+`./main`
+
+3. use cpp file as library in python files: 6.754573106765747
+`cd runtime`
+`python anagramfinder.py`
+
+### Todo
+make this library public and can be downloaded using pip
