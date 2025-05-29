@@ -205,4 +205,4 @@ files([random_words.txt](./runtime_calculator/random_words.txt)), and calculate 
 ![RuntimeResult](./runtime_result.jpg)
 
 ### Todo
-make this library public and can be downloaded using pip
+Make this library public and everyone can download this library using pip.
