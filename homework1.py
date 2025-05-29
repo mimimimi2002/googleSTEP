@@ -41,9 +41,8 @@ def find_anagram(targeted_word, new_dictionary):
   if targeted_word == "":
     return 'Word is empty'
 
-  # binary search
+  # get a list of anagrams
   sorted_word = "".join(sorted(targeted_word))
-  # anagrams = binary_serach(sorted_word, sorted_new_dictionary)
   anagrams = new_dictionary[sorted_word]
 
   if len(anagrams) == 0:
