@@ -13,7 +13,7 @@
 | runtime_calculator    | Calculate each runtimes for python, c++, c++ and python|
 
 # homework1
-### runtime
+### time complexity
 Given the target_word and dictionary, find the anagram of the target_word in dictionary.
 
 M: target_word's length
@@ -54,7 +54,7 @@ So the total runtime will be
 
 O(N * L * logL + N * logN + Q * M * logM * logN)
 
-### more effective way
+### more effective algorithm
 We created a sorted new dictionary, but if you want to find the sorted_word and get the origianl word,
 store them in dictionary and use O(1) to find the correspoinding origianl word.
 In this way, we don't need to do binary search.
@@ -68,7 +68,7 @@ We will create a new class that can test the different dictionary and also sort 
 matter how many request you do.
 
 ## homework2
-### runtime
+### time complexity
 This time, we will use a part of the letters in the targeted_word and find the anagram that has the highest score.
 Fisrt we can make use of the homework1's algorithm.
 
@@ -94,7 +94,7 @@ The total runtime will be
 
 O(L * N + Q * (M + M * N + length_longest_possible_anagram))
 
-### more efficient way
+### more efficient algorithm
 Is it necessary to hold all the possible anagrams to get the highest score?
 
 If the dictionary is sorted by score, the first anagrams we find is guaranteed to have
@@ -104,11 +104,25 @@ the runtime will be
 
 O(L * N + N * logN + Q * (M + M * (the times to find the highest score(most is way less than N))))
 
-## library
+## More efficient way in different language
 Considering that c++ or c language runs faster than python, we created a library that can be
 imported by python file and compare runtime for this.
 
-### To make it a library
+### C++ vs python
+Compiled languages vs. Interpreted languages
+
+C++ is a compiled language, meaning the code is converted into machine language ahead of time. As a result, the CPU can understand and execute it directly, making it very fast.
+
+Python is an interpreted language, meaning it reads and processes the code line by line at runtime. This introduces more overhead compared to C++, resulting in slower performance.
+
+### Make C++ version
+`cd library`
+
+`g++ -O3 -std=c++11 main.cpp -o main`
+
+`./main`
+
+### Make python library with c++
 1. use c++ to write the hw1 using class.
 
 2. add code in cpp file.
@@ -148,29 +162,35 @@ setup(
 
 7. then be able to use import anagramfinder in main.py
 
-### C++ vs python
-Compiled languages vs. Interpreted languages
+### Compare efficiency for runtime for three versions
 
-C++ is a compiled language, meaning the code is converted into machine language ahead of time. As a result, the CPU can understand and execute it directly, making it very fast.
+1. Pure Python
 
-Python is an interpreted language, meaning it reads and processes the code line by line at runtime. This introduces more overhead compared to C++, resulting in slower performance.
+2. Pure C++
 
-### run C++ file
-`cd library`
+3. Python + C++ Module
 
-`g++ -O3 -std=c++11 main.cpp -o main`
+To compare these, I created random 100 meaningful words with these three
+files((`random_words.txt`)), and calculate the toatl runtime.
+
+#### How to run
+
+1. Pure Python
+`cd runtime_calculator`
+
+`python anagramfinder_python.py`
+
+2. Pure C++
+`cd runtime_calculator`
+
+`g++ -O3 -std=c++11 anagramfinder.cpp -o main`
 
 `./main`
 
-### compare efficiency for runtime for three files.
-1. use only python
+3. Python + C++ Module
+`cd runtime_calculator`
 
-2. use only cpp file
-
-3. make a cpp library and use it in python
-
-To compare these, I created random 100 meaningful words with thess three
-files, (use the same test word files), and calculate the toatl runtime.
+`python anagramfinder.py`
 
 #### Result
 | Method               | Total runtime (sec)   |
@@ -179,22 +199,7 @@ files, (use the same test word files), and calculate the toatl runtime.
 | Pure C++             | 4.67243     |
 | Python + C++ Module  | 6.75457     |
 
-1. use only python: 9.308848857879639
-`cd runtime_calculator`
-
-`python anagramfinder_python.py`
-
-2. use only cpp file: 4.67243
-`cd runtime_calculator`
-
-`g++ -O3 -std=c++11 anagramfinder.cpp -o main`
-
-`./main`
-
-3. use cpp file as library in python files: 6.754573106765747
-`cd runtime_calculator`
-
-`python anagramfinder.py`
+![RuntimeResult](./runtime_result.jpg)
 
 ### Todo
 make this library public and can be downloaded using pip
