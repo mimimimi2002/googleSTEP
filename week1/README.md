@@ -123,7 +123,7 @@ Python is an interpreted language, meaning it reads and processes the code line 
 `./main`
 
 ### Make python library with C++
-1. use c++ to write the hw1 using class.
+1. use C++ to write the homework1 using class.
 
 2. add code in cpp file.
 ```
@@ -177,7 +177,7 @@ setup(
 3. Python using C++ Module
 
 To compare these, I created random 100 meaningful words with these three
-files([random_words.txt](./runtime_calculator/random_words.txt)), and calculate the toatl runtime.
+files([random_words.txt](./runtime_calculator/random_words.txt)), and calculate the total runtime.
 
 #### How to run
 
