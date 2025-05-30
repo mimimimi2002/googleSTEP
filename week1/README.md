@@ -25,14 +25,14 @@ Q: how many times they search the anagram of different words in the dictionary.
 L: the length of the longest word in dictionary
 
 In a greedy way, we rearrange the target_word(O(M!)) and then comapre with all the words in dictionary.
-If we do Q times, the runtime will be
+If we do Q times, the time complexity will be
 
 O(Q * M! * N).
 
-Assume that N has a large number, we can decrease the runtime.
+Assume that N has a large number, we can decrease the time complexity.
 
 Next, if we can sort the dictionary(O(N * logN)) we can do binary search to find the anagram.
-Moreover, considering that we only sort the dictionary once, the runtime will be
+Moreover, considering that we only sort the dictionary once, the time complexity will be
 
 O(N * logN + Q * M! * logN).
 
@@ -50,7 +50,7 @@ Then sort the dictionary again by sorted_word. (N * logN)
 Then sort the target_word. (M * logM)
 Then use the binary search to find the same sorted_word as the sorted target_word. (logN)
 
-So the total runtime will be
+So the total time complexity will be
 
 O(N * L * logL + N * logN + Q * M * logM * logN)
 
@@ -75,7 +75,7 @@ Fisrt we can make use of the homework1's algorithm.
 We need to get all the subset of the targeted word.(O(2^M)).
 Then do the same thing as the algorithm1.
 
-The runtime will be
+The time complexity will be
 O(N * L * logL + N * logN + Q * 2^M * M * logM * logN)
 
 Considering that anagrams can be created as long as the targeted_word has enough letters.
@@ -90,7 +90,7 @@ Then we will compare the letters in targeted_word and each word in dictionary an
 After getting the all possible anagrams and their score, choose the best anagram and its score.
 (O(length_longest_possible_anagram))
 
-The total runtime will be
+The total time complexity will be
 
 O(L * N + Q * (M + M * N + length_longest_possible_anagram))
 
@@ -100,7 +100,7 @@ Is it necessary to hold all the possible anagrams to get the highest score?
 If the dictionary is sorted by score, the first anagrams we find is guaranteed to have
 the highest score.
 
-the runtime will be
+the time complexity will be
 
 O(L * N + N * logN + Q * (M + M * (the times to find the highest score(most is way less than N))))
 
