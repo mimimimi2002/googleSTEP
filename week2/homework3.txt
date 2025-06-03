@@ -10,3 +10,7 @@ A. Considering that if you visit one of the website in the hash table and delete
    Linked list takes O(n) to find the element you want to delete and use O(1) to delete it.
    Also linked list takes O(1) to add the element to the first.
    We can change O(n) to O(1) to find the element to be deleted using hash map.
+
+   Now I imagine there is a hash map table that takes the url as key and node of website as value to access
+   to the element to delete and also there is a pointer that can keep track of the tail of
+   linked list to get the oldest website.
