@@ -1,0 +1,23 @@
+Q: Although Hash table functions O(1) as time complexity in terms of searching, adding, deleting
+elements, the system which uses huge database in real world utilizes tree structure to store
+data. What are the reasons?
+
+A.
+1 Not necessary to increase and deacrease the size of hash table to resize. Thus, it is
+  easy to maintain the system.
+  Suppose that you are having an unknown number for N, it takes time to adjust the size of
+  hash table whenever the scale of the number varies.
+
+2 If it is a balanced tree, the time complexity is guaranteed to be O(logN).
+  Suppose that even you have better hash function and better size of hash table to avoid
+  collision, it still has possibility that the worst time complexity is O(N) where most of
+  the data is stored in the same index of the hash table.
+
+3 Hash map takes unnecessary memory whereas tree structure only takes the memeory it needs.
+  Considering that hash map at least has 30 % of sapce to resize, if N is large, the unnecessary
+  memory takes up so much memeory.
+
+4 It is hard to come up with the good hash function.
+  Based on the what key it has, it has a different efficient hash function to avoid collision,
+  but if the key has nothing special rules (size, the type of characters), it is challenging to
+  get a good hash fuction.
