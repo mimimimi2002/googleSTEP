@@ -1,0 +1,12 @@
+Q; What is the data structure that can hold the resent N pairs of URL and the name of
+   website with O(1) where when it access the one of the element in the data table, it becomes
+   newest website it was visited, and if you access to the website that is not in this
+   data table, it will throw away the oldest website and sotre the new one?
+   Considering that to access the one element in data table, hash map will be useful to
+   access it with O(1) but how to maintain the order of recent visit to each website?
+
+A. Considering that if you visit one of the website in the hash table and delete it and
+   add it to the first element, combining hash map and linked list is the best solution.
+   Linked list takes O(n) to find the element you want to delete and use O(1) to delete it.
+   Also linked list takes O(1) to add the element to the first.
+   We can change O(n) to O(1) to find the element to be deleted using hash map.
