@@ -21,3 +21,7 @@ A.
   Based on the what key it has, it has a different efficient hash function to avoid collision,
   but if the key has nothing special rules (size, the type of characters), it is challenging to
   get a good hash fuction.
+
+5. To avoid the attack from outside. If someone intentionally insert words that has
+   the same hash or the same index after putting in hash table, this cause the delay of the service.
+   (Inspired by website)
