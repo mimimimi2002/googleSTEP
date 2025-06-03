@@ -46,17 +46,16 @@ class Item:
 #                 stores a linked list of items whose hash value is |hash|.
 # |self.item_count|: The total number of items in the hash table.
 class HashTable:
-    BUCKET_SIZE = 97
-
     # Initialize the hash table.
-    def __init__(self):
+    def __init__(self, bucket_size = 97):
         # Set the initial bucket size to 97. A prime number is chosen to reduce
         # hash conflicts.
-        self.bucket_size = HashTable.BUCKET_SIZE
+        self.default_bucket_size = bucket_size
+        self.bucket_size = bucket_size
         self.buckets = [None] * self.bucket_size
         self.item_count = 0
 
-    def put_item_to_bucket(self, key, value):
+    def __put_item_to_bucket(self, key, value):
       bucket_index = calculate_hash(key) % self.bucket_size
       item = self.buckets[bucket_index]
 
@@ -84,18 +83,18 @@ class HashTable:
 
       return items
 
-    def replace_all(self, items):
+    def __replace_all(self, items):
       for item in items:
-        self.put_item_to_bucket(item.key, item.value)
+        self.__put_item_to_bucket(item.key, item.value)
 
-    def shrink_bucket_size(self):
+    def __shrink_bucket_size(self):
       print("shrink")
       items = self.get_all_items()
 
       # recreate new hash table
 
       if int(self.bucket_size / 2) < 100:
-        self.bucket_size = HashTable.BUCKET_SIZE
+        self.bucket_size = self.default_bucket_size
 
       else:
         self.bucket_size = (
@@ -107,9 +106,9 @@ class HashTable:
       self.buckets = [None] * self.bucket_size
 
       # replace all the items
-      self.replace_all(items)
+      self.__replace_all(items)
 
-    def increase_bucket_size(self):
+    def __increase_bucket_size(self):
       print("increase")
       items = self.get_all_items()
 
@@ -123,7 +122,7 @@ class HashTable:
       self.buckets = [None] * self.bucket_size
 
       # replace all the items
-      self.replace_all(items)
+      self.__replace_all(items)
 
     # Put an item to the hash table. If the key already exists, the
     # corresponding value is updated to a new value.
@@ -138,9 +137,9 @@ class HashTable:
 
         # if the ration of items and bucket size is the same, double the size
         if self.item_count / self.bucket_size >= 1:
-          self.increase_bucket_size()
+          self.__increase_bucket_size()
 
-        if self.put_item_to_bucket(key, value):
+        if self.__put_item_to_bucket(key, value):
           self.item_count += 1
           return True
 
@@ -183,7 +182,7 @@ class HashTable:
           self.item_count -= 1
           # check if it can shrink
           # if self.bucket_size > HashTable.BUCKET_SIZE and self.item_count <= self.bucket_size / 2:
-          #   self.shrink_bucket_size()
+          #   self.__shrink_bucket_size()
           return True
 
         # when the middle element or the last element is the target
@@ -196,7 +195,7 @@ class HashTable:
             self.item_count -= 1
             # check if it can shrink
             # if self.bucket_size > HashTable.BUCKET_SIZE and self.item_count <= self.bucket_size / 2:
-            #   self.shrink_bucket_size()
+            #   self.__shrink_bucket_size()
             return True
 
           prev = curr
