@@ -16,10 +16,11 @@ import random, sys, time
 def calculate_hash(key):
     assert type(key) == str
     # Note: This is not a good hash function. Do you see why?
-    prime_numbers = [3, 5, 7, 11, 13, 17, 19, 23]
     hash = 0
+    prime_numbers = [23, 29, 31, 37, 41, 43, 47, 53]
+
     for i, c in enumerate(key):
-      hash += prime_numbers[i] * (ord(c) - ord('0') + 24)
+      hash += prime_numbers[i] * prime_numbers[i] * ord(c)
     return hash
 
 
