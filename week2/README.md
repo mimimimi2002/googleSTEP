@@ -36,7 +36,7 @@ Therefore, I expect that the odd number and if it is prime number, it can distri
 
 ### What is good hash function?
 Ideally, the hash function will not produce the same number if the key is different.
-Also, it needs to be distributed to prevent the numbers from clustering around certain values.
+Also, it needs to be distributed to prevent the numbers from clustering around certain values. We use ascii code for each character in string to create a hash number for that string.
 
 ## A tool to visualize hash map
 Although we predict some of the features of the hash function and the size of hash map can contribute to the distribution of index of table, it is challenging to visualize how these features can affect the distribution.
@@ -55,3 +55,105 @@ We create a tool that can visualize the hash map by putting table size and numbe
 
 5. If you want to change the value of input at 4, change the input and click the test button, then different result will be shown.
 
+## Experiments
+There are several senarios we can test if it is good hash function and good hash table size. In the following explanation, ord(c) means the ascii code for c character.
+
+1. Hash function : (index + 1) * ord(c) Table size:　prime number
+Considerinig that "alice" and "elica" is the same if their ascii codes are added.
+If there is a factor that the order matters to create a unique hash number.
+
+hash_function:
+```
+let hash = 0;
+for (let i = 0; i < key.length; i++) {
+  hash = (i + 1) * key[i].charCodeAt(0);
+}
+return hash;
+```
+
+- Hash table size 101
+- Number of keys 100
+- Range of key, 100000
+
+Result: Variance : 7.36, Max: 12, Min: 0
+
+- Hash table size 100003
+- Number of keys 100000
+- Range of key, 10000000
+
+Result: Variance : 8340.83, Max: 9810, Min: 0
+
+This does apply to the large number where it reqires the large number as hash number.
+
+2. Hash function : primeNumber(larger than the maximum of ascii code) * primeNumber(larger than the maximum of ascii code) * ord(c) Table size: prime number
+
+Considerinig that reaching to the large number and not overlapped with ascii code, we chosed large number of prime number and power them by 2.
+
+hash_function:
+```
+let hash = 0;
+const primesFrom256 = [257, 263, 269, 271, 277, 281, 283, 293, 307, 311];
+for (let i = 0; i < key.length; i++) {
+  hash += primesFrom256[i] * primesFrom256[i] * key[i].charCodeAt(0);
+}
+return hash;
+```
+
+- Hash table size 101
+- Number of keys 100
+- Range of key, 100000
+
+Result: Variance : 1.02, Max: 4, Min: 0
+
+- Hash table size 100003
+- Number of keys 100000
+- Range of key, 10000000
+
+Result: Variance : 1.02, Max: 9, Min: 0
+
+3. Hash table: Rolling hash: Table size: prime number
+This is a common hash that does not occur the collision using the idea of converting to another base. In this way, the small number will be changed to corresponding number in that base.
+
+```
+let base = 256;
+let hash = 0;
+for (let i = 0; i < key.length; i++) {
+  hash = (hash * base + key[i].charCodeAt(0));
+}
+return hash;
+```
+
+- Hash table size 101
+- Number of keys 100
+- Range of key, 100000
+
+Result: Variance : 0.82, Max: 3, Min: 0
+
+- Hash table size 100003
+- Number of keys 100000
+- Range of key, 10000000
+
+Result: Variance : 1.00, Max: 8, Min: 0
+
+## Result
+Take into account that the hash number is unique and has a variety of range and make sure that the number is way bigger than the bucket size, it is more easy to distribute the index of bucket. Using prime number in hash function and bucket size is also efficeint way.
+
+## Further question
+If the hash function is good enough which can produce unique number, does table size matter? Is it still ok even you use the even number?
+How about odd number, does it matter to be a prime number?
+We will use Rolling Hash as hash number
+
+- Hash table size 100000
+- Number of keys 100000
+- Range of key, 10000000
+
+Result: Variance : 6.82, Max: 21, Min: 0
+
+- Hash table size 99999
+- Number of keys 99999
+- Range of key, 10000000
+
+Result: Variance : 1.02, Max: 8, Min: 0
+
+## Conclusion
+Good hash function is one that produces unique number and has a variety of range and way bigger than the bucket size. Regarding table size, it seems it doesn't matter the size is prime number but as long as it is odd number and hash function is good enough to distribute, it works.
