@@ -78,10 +78,11 @@ return hash;
 
 Result: Variance : 7.36, Max: 12, Min: 0
 
-<figure>
-  <img src="./experiment1_small_size.png" alt="Index distribution in experiment1 with small table size" width="300">
-  <figcaption>Figure 1: Index distribution in experiment1 with small table size</figcaption>
-</figure>
+<p align="center">
+  <img src="./experiment1_small_size.png" alt="Index distribution in experiment1 with small table size" width="300"/>
+  <br>
+  <strong>Figure 1:</strong> Index distribution in <code>experiment1</code> with small table size
+</p>
 
 
 
