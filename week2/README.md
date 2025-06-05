@@ -77,7 +77,7 @@ return hash;
 
 Result: Variance : 7.36, Max: 12, Min: 0
 
-![result1_small](./experiment1_small_size.png)
+<img src="./experiment1_small_size.png" alt="result1_small" width="300"/>
 
 - Hash table size 100003
 - Number of keys 100000
