@@ -8,14 +8,22 @@
   <link rel="stylesheet" href="index.css">
 <body>
   <div class="title">Hash Table Visulization</div>
-  <div id="bucket-size">Hash table size <input id="bucket-input"></div>
-  <div id="test-size">Test times <input id="test-input"></div>
-  <div id="input-range">Range of the input <input id="range-input"></div>
+  <div id="bucket-size">Hash table size <input id="bucket-input" value="100003"></div>
+  <div id="test-size">Number of keys<input id="test-input" value="100000"></div>
+  <div id="input-range">Range of the key <input id="range-input" value="10000000"></div>
 
   <div>Hash function
     <div>function hash_function(key) {
     </div>
-    <div><textarea rows="20" cols="40" placeholder="Write your own hash function in javascript" id="hash-function" style="padding-left: 50px;"></textarea>
+    <div>
+      <textarea rows="20" cols="40" placeholder="Write your own hash function in javascript" id="hash-function" style="padding-left: 50px;">
+let base = 256;
+let hash = 0;
+for (let i = 0; i < key.length; i++) {
+  hash = (hash * base + key[i].charCodeAt(0));
+}
+return hash;
+      </textarea>
     </div>
     <div>}</div>
   </div>
@@ -27,6 +35,13 @@
     <span class="circle" id="canvas-mode"></span><span>Canvas mode</span>
   </div>
 
+  <div class="results hidden">
+   <div> Mean bucket size: <span id="mean"></span></div>
+   <div> Variance: <span id="variance"></span></div>
+   <div> Standard deviation:<span id="standard-deviation"></span></div>
+   <div> Max bucket size:<span id="max-size"></span></div>
+   <div> Min bucket size:<span id="min-size"></span></div>
+  </div>
   <div class=""><canvas id="canvas" class="hidden" style="border: 1px solid black;"></canvas></div>
   <div class="numbers"></div>
 

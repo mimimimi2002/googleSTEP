@@ -80,11 +80,46 @@
     }
   }
 
+  function show_results(dict) {
+    const results = qs(".results");
+    results.classList.remove("hidden");
+    // Calculate variance and standard deviation
+    let counts = [];
+    let total = 0;
 
-  function calculate_hash(testSize, inputRange, bucketSize, mode, new_hash_function) {
+    // Gather counts of all buckets (fill 0 if missing)
+    for (let i = 0; i < bucketSize; i++) {
+      const count = dict.get(i) || 0;
+      counts.push(count);
+      total += count;
+    }
+
+    const mean = total / bucketSize;
+
+    // Variance = average squared difference from the mean
+    const variance = counts.reduce((acc, c) => acc + (c - mean) ** 2, 0) / bucketSize;
+
+    // Standard deviation = sqrt(variance)
+    const stddev = Math.sqrt(variance);
+
+    id("mean").textContent = mean.toFixed(2);
+    id("variance").textContent = variance.toFixed(2);
+    id("standard-deviation").textContent = stddev.toFixed(2);
+    id("max-size").textContent = Math.max(...counts)
+    id("min-size").textContent = Math.min(...counts)
+    console.log(`Mean bucket size: ${mean.toFixed(2)}`);
+    console.log(`Variance: ${variance.toFixed(2)}`);
+    console.log(`Standard deviation: ${stddev.toFixed(2)}`);
+    console.log(`Max bucket size: ${Math.max(...counts)}`);
+    console.log(`Min bucket size: ${Math.min(...counts)}`);
+  }
+
+
+  function calculate_hash(testSize, inputRange, bucketSize, new_hash_function) {
     const dict = new Map();
+    const rands = getRandomUniqueNumbers(testSize, 0, inputRange);
     for (let i = 0; i < testSize; i++) {
-      const rand = Math.floor(Math.random() * inputRange); // random int [0, 99999999]
+      const rand = rands[i];
       const hash = new_hash_function(rand.toString());
 
       const index = hash % bucketSize;
@@ -92,14 +127,29 @@
       dict.set(index, current + 1);
     }
 
-    if (mode === "canvas-mode") {
-      draw_campus(dict, bucketSize);
-    }
-    if (mode === "number-mode") {
-      show_grids_with_numbers(bucketSize);
-      show_color(dict);
-    }
+    return dict;
   }
+
+  function getRandomUniqueNumbers(count, min, max) {
+    const numbers = [];
+    const range = [];
+
+    // Create an array with numbers from min to max
+    for (let i = min; i <= max; i++) {
+      range.push(i);
+    }
+
+    // Shuffle the array
+    for (let i = range.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [range[i], range[j]] = [range[j], range[i]];
+    }
+
+    // Take the first 'count' numbers
+    return range.slice(0, count);
+  }
+
+
 
 
   function click_test_button() {
@@ -111,10 +161,18 @@
     let new_hash_function = evaluate_hash_function(hashFunction);
     console.log(new_hash_function("hello"));
 
-    calculate_hash(testSize, inputRange, bucketSize, "number-mode", new_hash_function);
-    calculate_hash(testSize, inputRange, bucketSize, "canvas-mode", new_hash_function);
+    const dict = calculate_hash(testSize, inputRange, bucketSize, new_hash_function);
+
+    // draw campus
+    draw_campus(dict, bucketSize);
+
+    // draw grid numbers
+    show_grids_with_numbers(bucketSize);
+    show_color(dict);
 
     show_modes();
+
+    show_results(dict);
   }
 
   function evaluate_hash_function(inputBody) {
@@ -172,56 +230,34 @@
   }
 
   function draw_campus(dict, bucketSize) {
-    const width = Math.sqrt(bucketSize)
-    const height =  Math.sqrt(bucketSize);
-    const canvas = id('canvas');
+    const width = Math.floor(Math.sqrt(bucketSize));
+    const height = Math.floor(Math.sqrt(bucketSize));
+
+    const pixelSize = 600 / width;
+
+    const canvas = document.getElementById('canvas');
+    canvas.width = width * pixelSize;
+    canvas.height = height * pixelSize;
     const ctx = canvas.getContext('2d');
-
-    canvas.width = Math.sqrt(bucketSize);
-    canvas.height = Math.sqrt(bucketSize);
-
-    const imageData = ctx.createImageData(width, height);
-    const data = imageData.data;
 
     let maxCount = 0;
     for (const count of dict.values()) {
       if (count > maxCount) maxCount = count;
     }
 
-    // Color each button based on its count
     for (const [index, count] of dict.entries()) {
+      const x = index % width;
+      const y = Math.floor(index / width);
 
-      // Normalize count to [0, 1]
       const brightness = count / maxCount;
-
-      // Convert brightness to a color if the index has many elements, the color will be closer to blue.
       const colorValue = Math.floor(255 * (1 - brightness));
 
-      const pixelIndex = index * 4;
-
-      data[pixelIndex] = 255;     // Red
-      data[pixelIndex + 1] = colorValue; // Green
-      data[pixelIndex + 2] = colorValue; // Blue
-      data[pixelIndex + 3] = 255;        // Alpha (fully opaque)
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-
-    const aspectRatio = width / height;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const windowAspectRatio = windowWidth / windowHeight;
-
-    if (windowAspectRatio > aspectRatio) {
-      // Window is wider than canvas aspect ratio
-      canvas.style.height = windowHeight + 'px';
-      canvas.style.width = (windowHeight * aspectRatio) + 'px';
-    } else {
-      // Window is taller than canvas aspect ratio
-      canvas.style.width = windowWidth + 'px';
-      canvas.style.height = (windowWidth / aspectRatio) + 'px';
+      ctx.fillStyle = `rgb(255, ${colorValue}, ${colorValue})`;
+      ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
     }
   }
+
+
 
   /** ------------------------------ Helper Functions  ------------------------------ */
   /**
