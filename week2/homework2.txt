@@ -25,3 +25,8 @@ A.
 5. To avoid the attack from outside. If someone intentionally insert words that has
    the same hash or the same index after putting in hash table, this cause the delay of the service.
    (Inspired by website)
+
+6. It is challenging to store the a part of data in hash map whereas tree can store a part of data and the
+   rest of the nodes can be stored in different file.
+   Since the hash map requires the whole structure to get the index, you cannot use a part
+   of data. (Inspired by mentor)
