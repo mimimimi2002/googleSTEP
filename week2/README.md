@@ -74,12 +74,12 @@ for (let i = 0; i < key.length; i++) {
 return hash;
 ```
 
-#### Settings
+#### Setting1
 - Hash table size 101
 - Number of keys 100
 - Range of key 100000
 
-#### Results
+#### Result1
 - Variance : 7.36
 - Max number of same index: 12
 - Min number of same index : 0
@@ -90,16 +90,21 @@ return hash;
   <strong>Figure 1:</strong> Index distribution in <code>Experiment1</code> with small table size
 </p>
 
+#### Setting2
+- Hash table size 101
+- Number of keys 100
+- Range of key 100000
 
+#### Result2
+- Variance : 7.36
+- Max number of same index: 12
+- Min number of same index : 0
 
-
-- Hash table size 100003
-- Number of keys 100000
-- Range of key, 10000000
-
-Result: Variance : 8340.83, Max: 9810, Min: 0
-
-<img src="./experiment1_large_size.png" alt="result1_small" width="300"/>
+<p align="center">
+  <img src="./experiment1_large_size.png" alt="Index distribution in experiment1 with small table size" width="300"/>
+  <br>
+  <strong>Figure 1:</strong> Index distribution in <code>Experiment1</code> with large table size
+</p>
 
 This does apply to the large number where it reqires the large number as hash number.
 
