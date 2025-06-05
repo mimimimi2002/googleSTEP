@@ -56,11 +56,17 @@ class HashTable:
         self.buckets = [None] * self.bucket_size
         self.item_count = 0
 
+    # Put key and value to the bucket.
+    # |key|: The key of the item. The key must be a string.
+    # |value|: The value of the item.
     def __put_item_to_bucket(self, key, value):
+
+      # calculate hash for the key and get the reminder divided by the size of bucket.
+      # and get the index of bucket.
       bucket_index = calculate_hash(key) % self.bucket_size
       item = self.buckets[bucket_index]
 
-      # iterate the linked list in the specific bucket
+      # iterate the linked list in the bucket at the index.
       # if you find the same key, put the updated value in it.
       while item:
           if item.key == key:
@@ -68,11 +74,13 @@ class HashTable:
               return False
           item = item.next
 
+      # if it is the new key,
       # put the new item at the first element in the linked list.
       new_item = Item(key, value, self.buckets[bucket_index])
       self.buckets[bucket_index] = new_item
       return True
 
+    # Get all the key and value in the bucket.
     def get_all_items(self):
       items = []
       for i in range(self.bucket_size):
@@ -84,19 +92,22 @@ class HashTable:
 
       return items
 
+    # replace all the items in the bucket
+    # |items|: a list of Item instances
     def __replace_all(self, items):
       for item in items:
         self.__put_item_to_bucket(item.key, item.value)
 
+    # shrink the bucket size
     def __shrink_bucket_size(self):
-      print("shrink")
       items = self.get_all_items()
 
       # recreate new hash table
-
+      # if it the half of the original size is less than 100, make the bucket size 97.
       if int(self.bucket_size / 2) < 100:
         self.bucket_size = self.default_bucket_size
 
+      # half the bucket size and make it odd
       else:
         self.bucket_size = (
             int(self.bucket_size / 2) + 1
@@ -109,11 +120,12 @@ class HashTable:
       # replace all the items
       self.__replace_all(items)
 
+    # Increase the size of the bucket.
     def __increase_bucket_size(self):
-      print("increase")
       items = self.get_all_items()
 
-      # make it odd
+      # make the size odd
+      # try use the prime numbers for bucket size
       self.bucket_size = self.bucket_size * 2 + 1
 
       # still make sure it will not be divided in small numbers
@@ -136,8 +148,8 @@ class HashTable:
         assert type(key) == str
         self.check_size() # Note: Don't remove this code.
 
-        # if the ration of items and bucket size is the same, double the size
-        if self.item_count / self.bucket_size >= 1:
+        # if the ration of items and bucket size is 70 %, increase the size
+        if self.item_count / self.bucket_size >= 0.7:
           self.__increase_bucket_size()
 
         if self.__put_item_to_bucket(key, value):
@@ -181,9 +193,10 @@ class HashTable:
         if item.key == key:
           self.buckets[bucket_index] = item.next
           self.item_count -= 1
+
           # check if it can shrink
-          # if self.bucket_size > HashTable.BUCKET_SIZE and self.item_count <= self.bucket_size / 2:
-          #   self.__shrink_bucket_size()
+          if self.bucket_size > 97 and self.item_count <= self.bucket_size * 0.3:
+            self.__shrink_bucket_size()
           return True
 
         # when the middle element or the last element is the target
@@ -195,8 +208,8 @@ class HashTable:
             prev.next = curr.next
             self.item_count -= 1
             # check if it can shrink
-            # if self.bucket_size > HashTable.BUCKET_SIZE and self.item_count <= self.bucket_size / 2:
-            #   self.__shrink_bucket_size()
+            if self.bucket_size > 97 and self.item_count <= self.bucket_size * 0.3:
+              self.__shrink_bucket_size()
             return True
 
           prev = curr
@@ -222,13 +235,9 @@ class HashTable:
 def functional_test():
     hash_table = HashTable()
 
-    hash_table.check_size()
-
     assert hash_table.put("aaa", 1) == True
     assert hash_table.get("aaa") == (1, True)
     assert hash_table.size() == 1
-    
-    hash_table.check_size()
 
     assert hash_table.put("bbb", 2) == True
     assert hash_table.put("ccc", 3) == True
@@ -241,21 +250,14 @@ def functional_test():
     assert hash_table.get("aa") == (None, False)
     assert hash_table.get("aaaa") == (None, False)
     assert hash_table.size() == 4
-    
-    hash_table.check_size()
-
 
     assert hash_table.put("aaa", 11) == False
     assert hash_table.get("aaa") == (11, True)
     assert hash_table.size() == 4
-    
-    hash_table.check_size()
 
     assert hash_table.delete("aaa") == True
     assert hash_table.get("aaa") == (None, False)
     assert hash_table.size() == 3
-
-    hash_table.check_size()
 
     assert hash_table.delete("a") == False
     assert hash_table.delete("aa") == False
@@ -270,8 +272,6 @@ def functional_test():
     assert hash_table.get("ccc") == (None, False)
     assert hash_table.get("ddd") == (None, False)
     assert hash_table.size() == 0
-    
-    hash_table.check_size()
 
     assert hash_table.put("abc", 1) == True
     assert hash_table.put("acb", 2) == True
@@ -286,8 +286,6 @@ def functional_test():
     assert hash_table.get("cab") == (5, True)
     assert hash_table.get("cba") == (6, True)
     assert hash_table.size() == 6
-    
-    hash_table.check_size()
 
     assert hash_table.delete("abc") == True
     assert hash_table.delete("cba") == True
