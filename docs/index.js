@@ -117,8 +117,9 @@
 
   function calculate_hash(testSize, inputRange, bucketSize, new_hash_function) {
     const dict = new Map();
+    const rands = getRandomUniqueNumbers(testSize, 0, inputRange);
     for (let i = 0; i < testSize; i++) {
-      const rand = Math.floor(Math.random() * inputRange); // random int [0, 99999999]
+      const rand = rands[i];
       const hash = new_hash_function(rand.toString());
 
       const index = hash % bucketSize;
@@ -128,6 +129,27 @@
 
     return dict;
   }
+
+  function getRandomUniqueNumbers(count, min, max) {
+    const numbers = [];
+    const range = [];
+
+    // Create an array with numbers from min to max
+    for (let i = min; i <= max; i++) {
+      range.push(i);
+    }
+
+    // Shuffle the array
+    for (let i = range.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [range[i], range[j]] = [range[j], range[i]];
+    }
+
+    // Take the first 'count' numbers
+    return range.slice(0, count);
+  }
+
+
 
 
   function click_test_button() {
@@ -210,54 +232,32 @@
   function draw_campus(dict, bucketSize) {
     const width = Math.floor(Math.sqrt(bucketSize));
     const height = Math.floor(Math.sqrt(bucketSize));
-    const canvas = id('canvas');
+
+    const pixelSize = window.innerWidth / width;
+
+    const canvas = document.getElementById('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = height * pixelSize;
     const ctx = canvas.getContext('2d');
-
-    canvas.width = Math.sqrt(bucketSize);
-    canvas.height = Math.sqrt(bucketSize);
-
-    const imageData = ctx.createImageData(width, height);
-    const data = imageData.data;
 
     let maxCount = 0;
     for (const count of dict.values()) {
       if (count > maxCount) maxCount = count;
     }
 
-    // Color each button based on its count
     for (const [index, count] of dict.entries()) {
+      const x = index % width;
+      const y = Math.floor(index / width);
 
-      // Normalize count to [0, 1]
       const brightness = count / maxCount;
-
-      // Convert brightness to a color if the index has many elements, the color will be closer to blue.
       const colorValue = Math.floor(255 * (1 - brightness));
 
-      const pixelIndex = index * 4;
-
-      data[pixelIndex] = 255;     // Red
-      data[pixelIndex + 1] = colorValue; // Green
-      data[pixelIndex + 2] = colorValue; // Blue
-      data[pixelIndex + 3] = 255;        // Alpha (fully opaque)
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-
-    const aspectRatio = width / height;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const windowAspectRatio = windowWidth / windowHeight;
-
-    if (windowAspectRatio > aspectRatio) {
-      // Window is wider than canvas aspect ratio
-      canvas.style.height = windowHeight + 'px';
-      canvas.style.width = (windowHeight * aspectRatio) + 'px';
-    } else {
-      // Window is taller than canvas aspect ratio
-      canvas.style.width = windowWidth + 'px';
-      canvas.style.height = (windowWidth / aspectRatio) + 'px';
+      ctx.fillStyle = `rgb(255, ${colorValue}, ${colorValue})`;
+      ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
     }
   }
+
+
 
   /** ------------------------------ Helper Functions  ------------------------------ */
   /**
