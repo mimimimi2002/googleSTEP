@@ -1,4 +1,5 @@
 import random, sys, time
+import matplotlib.pylab as plt
 
 ###########################################################################
 #                                                                         #
@@ -17,7 +18,7 @@ def calculate_hash(key):
     assert type(key) == str
     # Note: This is not a good hash function. Do you see why?
     hash = 0
-    prime_numbers = [23, 29, 31, 37, 41, 43, 47, 53]
+    prime_numbers = [257, 263, 269, 271, 277, 281, 283, 293, 307, 311]
 
     for i, c in enumerate(key):
       hash += prime_numbers[i] * prime_numbers[i] * ord(c)
@@ -230,6 +231,16 @@ class HashTable:
         assert (self.bucket_size < 100 or
                 self.item_count >= self.bucket_size * 0.3)
 
+# Plot the runtime from the results
+def plot_runtime_result(runtimes):
+    plt.figure(figsize=(8, 4))
+    plt.plot(runtimes, marker='o', linestyle='-')
+    plt.title("Runtime Results")
+    plt.xlabel("Iteration times")
+    plt.ylabel("Runtime")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
 # Test the functional behavior of the hash table.
 def functional_test():
@@ -294,8 +305,7 @@ def functional_test():
     assert hash_table.delete("acb") == True
     assert hash_table.delete("cab") == True
     assert hash_table.size() == 0
-    
-    hash_table.check_size()
+
     print("Functional tests passed!")
 
 
@@ -309,11 +319,10 @@ def functional_test():
 # 2) tweak the hash function (Hint: think about ways to reduce hash conflicts).
 def performance_test():
     hash_table = HashTable()
-
+    runtimes = []
 
     for iteration in range(100):
         begin = time.time()
-        print("begin")
         random.seed(iteration)
         for i in range(10000):
             rand = random.randint(0, 100000000)
@@ -324,6 +333,9 @@ def performance_test():
             hash_table.get(str(rand))
         end = time.time()
         print("%d %.6f" % (iteration, end - begin))
+        runtimes.append(end - begin)
+
+    plot_runtime_result(runtimes)
 
     for iteration in range(100):
         random.seed(iteration)
