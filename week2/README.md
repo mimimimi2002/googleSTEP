@@ -7,7 +7,7 @@
 | homework1.py          | Main code for homework1                          |python homework1.py|
 | homework2.txt          | Answer for homework2                            |           |
 | homework3.txt          | Answer for homework3                            |           |
-| homework4.py           | Main code for homework4                         |           |
+| homework4.py           | Main code for homework4                         |python homework4.py     |
 | hashmap_visualize      | A website to visualize the customized hash map  |url: https://mimimimi2002.github.io/googleSTEP/|
 
 # Homework1
@@ -45,8 +45,8 @@ We create a tool that can visualize the hash map by putting table size and numbe
 ### How to use the tool to visualize hash map?
 1. visit `https://mimimimi2002.github.io/googleSTEP/`
 
-2. put the table size in Hash table size blank, the size of keys, the range of key, and
-   the hash function using javascript.
+2. put the table size, the size of keys, the range of key, and
+   the hash function using javascript into the inputs.
 
 3. click test button
 
