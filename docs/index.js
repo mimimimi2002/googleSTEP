@@ -3,7 +3,9 @@
 (function() {
 
   // MODULE GLOBAL VARIABLES, CONSTANTS, AND HELPER FUNCTIONS CAN BE PLACED HERE
-
+  let bucketSize;
+  let testSize;
+  let inputRange;
   /**
    * Add a function that will be called when the window is loaded.
    */
@@ -18,19 +20,42 @@
    */
   function init() {
     let testButton = id("test-button");
-    testButton.addEventListener("click", test_hash_table);
+    testButton.addEventListener("click", click_test_button);
+    let modes = qsa(".circle");
+    for (let i = 0; i < modes.length; i++) {
+      modes[i].addEventListener("click", chooseMode);
+    }
   }
 
-  function hash_function(key) {
-    let hash = 0;
+  function chooseMode(e) {
+    let mode = e.target.id;
 
-    const prime_numbers = [23, 29, 31, 37, 41, 43, 47, 53]
-
-    for (let i = 0; i < key.length; i++) {
-      hash += prime_numbers[i] * prime_numbers[i] * (key[i].charCodeAt(0));
+    // deactivate all the modes
+    let modes = qsa(".circle");
+    for (let i = 0; i < modes.length; i++) {
+      modes[i].classList.remove("active");
     }
 
-    return hash;
+    if (mode === "canvas-mode") {
+      let canvasMode = qs("#canvas-mode");
+      canvasMode.classList.add("active");
+      let numberMode = qs("#number-mode");
+      numberMode.classList.remove("active");
+      let canvas = qs("#canvas");
+      canvas.classList.remove("hidden");
+      let numbers = qs(".numbers");
+      numbers.classList.add("hidden");
+    }
+    if (mode === "number-mode") {
+      let numberMode = qs("#number-mode");
+      numberMode.classList.add("active");
+      let canvasMode = qs("#canvas-mode");
+      canvasMode.classList.remove("active");
+      let canvas = qs("#canvas");
+      canvas.classList.add("hidden");
+      let numbers = qs(".numbers");
+      numbers.classList.remove("hidden");
+    }
   }
 
   function show_color(dict) {
@@ -51,39 +76,79 @@
 
       // Convert brightness to a color if the index has many elements, the color will be closer to blue.
       const colorValue = Math.floor(255 * (1 - brightness));
-      button.style.backgroundColor = `rgb(${colorValue}, ${colorValue}, 255)`; // Blueish gradient
+      button.style.backgroundColor = `rgb(255, ${colorValue}, ${colorValue})`; // Blueish gradient
     }
   }
 
 
-  function calculate_hash(testSize, inputRange, bucketSize) {
+  function calculate_hash(testSize, inputRange, bucketSize, mode, new_hash_function) {
     const dict = new Map();
     for (let i = 0; i < testSize; i++) {
       const rand = Math.floor(Math.random() * inputRange); // random int [0, 99999999]
-      const hash = hash_function(rand.toString());
+      const hash = new_hash_function(rand.toString());
 
       const index = hash % bucketSize;
       const current = dict.get(index) || 0;
       dict.set(index, current + 1);
     }
 
-    show_color(dict);
+    if (mode === "canvas-mode") {
+      draw_campus(dict);
+    }
+    if (mode === "number-mode") {
+      show_grids_with_numbers(bucketSize);
+      show_color(dict);
+    }
   }
 
 
-  function test_hash_table() {
-    const bucketSize = id('bucket-input').value;
-    const testSize = id('test-input').value;
-    const inputRange = id('range-input').value;
+  function click_test_button() {
+    bucketSize = id('bucket-input').value;
+    testSize = id('test-input').value;
+    inputRange = id('range-input').value;
 
-    show_grids(bucketSize);
+    let hashFunction = id("hash-function").value;
+    let new_hash_function = evaluate_hash_function(hashFunction);
+    console.log(new_hash_function("hello"));
 
-    calculate_hash(testSize, inputRange, bucketSize);
+    calculate_hash(testSize, inputRange, bucketSize, "number-mode", new_hash_function);
+    calculate_hash(testSize, inputRange, bucketSize, "canvas-mode", new_hash_function);
 
+    show_modes();
   }
 
-  function show_grids(bucketSize) {
-    const grids = qs(".grids");
+  function evaluate_hash_function(inputBody) {
+    try {
+      const wrappedCode = `
+      function hash_function(key) {
+        ${inputBody}
+      }
+    `;
+      const wrapper = new Function(wrappedCode + "; return hash_function;");
+      const fn = wrapper();
+
+      if (typeof fn === "function") {
+        return fn;
+      } else {
+        alert("No valid function found.");
+      }
+
+    } catch (e) {
+      alert("Error in function: " + e.message);
+      console.error(e);
+    }
+  }
+
+  function show_modes() {
+    let modes = qs(".modes");
+    modes.classList.remove("hidden");
+
+    let numberMode = qs("#number-mode");
+    numberMode.classList.add("active");
+  }
+
+  function show_grids_with_numbers(bucketSize) {
+    const grids = qs(".numbers");
     grids.innerHTML = ""
 
     for (let i = 0; i < bucketSize; i++) {
@@ -98,9 +163,43 @@
       numberButton.id = i
       grids.appendChild(numberButton);
     }
+  }
 
+  function draw_campus(dict) {
+    const width = 512;
+    const height = 512;
+    const canvas = id('canvas');
+    const ctx = canvas.getContext('2d');
 
+    canvas.width = width;
+    canvas.height = height;
 
+    const imageData = ctx.createImageData(width, height);
+    const data = imageData.data;
+
+    let maxCount = 0;
+    for (const count of dict.values()) {
+      if (count > maxCount) maxCount = count;
+    }
+
+    // Color each button based on its count
+    for (const [index, count] of dict.entries()) {
+
+      // Normalize count to [0, 1]
+      const brightness = count / maxCount;
+
+      // Convert brightness to a color if the index has many elements, the color will be closer to blue.
+      const colorValue = Math.floor(255 * (1 - brightness));
+
+      const pixelIndex = index * 4;
+
+      data[pixelIndex] = 255;     // Red
+      data[pixelIndex + 1] = colorValue; // Green
+      data[pixelIndex + 2] = colorValue; // Blue
+      data[pixelIndex + 3] = 255;        // Alpha (fully opaque)
+    }
+
+    ctx.putImageData(imageData, 0, 0);
   }
 
   /** ------------------------------ Helper Functions  ------------------------------ */
@@ -125,6 +224,10 @@
    */
   function qs(selector) {
     return document.querySelector(selector);
+  }
+
+  function qsa(selector) {
+    return document.querySelectorAll(selector);
   }
 
   /**

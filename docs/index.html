@@ -8,12 +8,27 @@
   <link rel="stylesheet" href="index.css">
 <body>
   <div class="title">Hash Table Visulization</div>
-  <div id="bucket-size">bucket size <input id="bucket-input"></div>
-  <div id="test-size">test times <input id="test-input"></div>
-  <div id="input-range">range of the input <input id="range-input"></div>
+  <div id="bucket-size">Hash table size <input id="bucket-input"></div>
+  <div id="test-size">Test times <input id="test-input"></div>
+  <div id="input-range">Range of the input <input id="range-input"></div>
+
+  <div>Hash function
+    <div>function hash_function(key) {
+    </div>
+    <div><textarea rows="20" cols="40" placeholder="Write your own hash function" id="hash-function" style="padding-left: 50px;"></textarea>
+    </div>
+    <div>}</div>
+  </div>
+
   <button id="test-button">test</button>
 
-  <div class="grids"></div>
+  <div class="modes hidden">
+    <span class="circle active" id="number-mode"></span><span>Number mode</span>
+    <span class="circle" id="canvas-mode"></span><span>Canvas mode</span>
+  </div>
+
+  <div class=""><canvas id="canvas" class="hidden"></canvas></div>
+  <div class="numbers"></div>
 
 </body>
 </html>
