@@ -47,8 +47,8 @@ The color is calculated by
 | Color | RGB Value Calculation |
 |---------------|------------------------|
 | Red (R) |  always `255` |
-|Green (G) | `(1 - number of the keys / total number of keys) * 255` |
-| Blue (B) | `(1 - number of the keys / total number of keys) * 255` |
+|Green (G) | `(1 - number of the keys the index holds / total number of keys) * 255` |
+| Blue (B) | `(1 - number of the keys the index holds / total number of keys) * 255` |
 
 If the index holds nothing, the color is white, if the index holds all the keys, the color is maximum red.
 
