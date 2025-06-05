@@ -58,7 +58,7 @@ We create a tool that can visualize the hash map by putting table size and numbe
 ## Experiments
 There are several senarios we can test if it is good hash function and good hash table size. In the following explanation, ord(c) means the ascii code for c character.
 
-### Experiment1.
+### Experiment1
 #### Hash function : (index + 1) * ord(c) Table size : prime number
 
 Considerinig that "alice" and "elica" is the same if their ascii codes are added.
@@ -91,9 +91,9 @@ return hash;
 </p>
 
 #### Setting2
-- Hash table size 101
-- Number of keys 100
-- Range of key 100000
+- Hash table size 100003
+- Number of keys 100000
+- Range of key 10000000
 
 #### Result2
 - Variance : 7.36
@@ -103,16 +103,18 @@ return hash;
 <p align="center">
   <img src="./experiment1_large_size.png" alt="Index distribution in experiment1 with small table size" width="300"/>
   <br>
-  <strong>Figure 1:</strong> Index distribution in <code>Experiment1</code> with large table size
+  <strong>Figure 2:</strong> Index distribution in <code>Experiment1</code> with large table size
 </p>
 
-This does apply to the large number where it reqires the large number as hash number.
+#### Observation
+This hash function does not apply to the large number where it reqires the large number as hash number.
 
-2. Hash function : primeNumber(larger than the maximum of ascii code) * primeNumber(larger than the maximum of ascii code) * ord(c) Table size: prime number
+### Experiment2
+#### Hash function : primeNumber(larger than the maximum of ascii code) * primeNumber(larger than the maximum of ascii code) * ord(c) Table size: prime number
 
 Considerinig that reaching to the large number and not overlapped with ascii code, we chosed large number of prime number and power them by 2.
 
-hash_function:
+#### Hash Function
 ```
 let hash = 0;
 const primesFrom256 = [257, 263, 269, 271, 277, 281, 283, 293, 307, 311];
@@ -122,26 +124,43 @@ for (let i = 0; i < key.length; i++) {
 return hash;
 ```
 
+#### Setting1
 - Hash table size 101
 - Number of keys 100
 - Range of key, 100000
 
-Result: Variance : 1.02, Max: 4, Min: 0
+#### Result1
+- Variance : 1.02
+- Max number of same index: 4
+- Min number of same index : 0
 
-<img src="./experiment2_small_size.png" alt="result2_small" width="300"/>
+<p align="center">
+  <img src="./experiment2_small_size.png" alt="Index distribution in experiment1 with small table size" width="300"/>
+  <br>
+  <strong>Figure 3:</strong> Index distribution in <code>Experiment2</code> with small table size
+</p>
 
+#### Setting2
 - Hash table size 100003
 - Number of keys 100000
-- Range of key, 10000000
+- Range of key 10000000
 
-Result: Variance : 1.02, Max: 9, Min: 0
+#### Result2
+- Variance : 1.02
+- Max number of same index: 9
+- Min number of same index : 0
 
-<img src="./experiment2_large_size.png" alt="result3_large" width="300"/>
+<p align="center">
+  <img src="./experiment2_large_size.png" alt="Index distribution in experiment2 with large table size" width="300"/>
+  <br>
+  <strong>Figure 4:</strong> Index distribution in <code>Experiment2</code> with large table size
+</p>
 
-
-3. Hash table: Rolling hash: Table size: prime number
+### Experiment3
+#### Hash function : Rolling hash Table size: prime number
 This is a common hash that does not occur the collision using the idea of converting to another base. In this way, the small number will be changed to corresponding number in that base.
 
+#### Hash Function
 ```
 let base = 256;
 let hash = 0;
@@ -151,22 +170,38 @@ for (let i = 0; i < key.length; i++) {
 return hash;
 ```
 
+#### Setting1
 - Hash table size 101
 - Number of keys 100
 - Range of key, 100000
 
-Result: Variance : 0.82, Max: 3, Min: 0
+#### Result1
+- Variance : 0.82
+- Max number of same index: 3
+- Min number of same index : 0
 
-<img src="./experiment3_small_size.png" alt="result3_small" width="300"/>
+<p align="center">
+  <img src="./experiment3_small_size.png" alt="Index distribution in experiment2 with large table size" width="300"/>
+  <br>
+  <strong>Figure 5:</strong> Index distribution in <code>Experiment3</code> with small table size
+</p>
 
 
+#### Setting2
 - Hash table size 100003
 - Number of keys 100000
-- Range of key, 10000000
+- Range of key 10000000
 
-Result: Variance : 1.00, Max: 8, Min: 0
+#### Result2
+- Variance : 1.00
+- Max number of same index: 8
+- Min number of same index : 0
 
-<img src="./experiment3_large_size.png" alt="result3_large" width="300"/>
+<p align="center">
+  <img src="./experiment3_large_size.png" alt="Index distribution in experiment3 with large table size" width="300"/>
+  <br>
+  <strong>Figure 5:</strong> Index distribution in <code>Experiment3</code> with large table size
+</p>
 
 
 ## Result
@@ -177,26 +212,44 @@ If the hash function is good enough which can produce unique number, does table 
 How about odd number, does it matter to be a prime number?
 We will use Rolling Hash as hash number.
 
-4. Hash table: Rolling hash: Table size: even number
+### Experiment4
+#### Hash function : Rolling hash Table size: even number
 
+#### Setting
 - Hash table size 100000
 - Number of keys 100000
-- Range of key, 10000000
+- Range of key 10000000
 
-Result: Variance : 6.82, Max: 21, Min: 0
+#### Result
+- Variance : 6.82
+- Max number of same index: 21
+- Min number of same index : 0
 
-<img src="./experiment4.png" alt="result4" width="300"/>
+<p align="center">
+  <img src="./experiment4.png" alt="Index distribution in experiment5" width="300"/>
+  <br>
+  <strong>Figure 5:</strong> Index distribution in <code>Experiment4</code>
+</p>
 
 
-5. Hash table: Rolling hash: Table size: odd number
+### Experiment5
+#### Hash function : Rolling hash Table size: odd number
 
+#### Setting
 - Hash table size 99999
 - Number of keys 99999
-- Range of key, 10000000
+- Range of key 10000000
 
-Result: Variance : 1.02, Max: 8, Min: 0
+#### Result
+- Variance : 1.02
+- Max number of same index: 8
+- Min number of same index : 0
 
-<img src="./experiment5.png" alt="result5" width="300"/>
+<p align="center">
+  <img src="./experiment5.png" alt="Index distribution in experiment5" width="300"/>
+  <br>
+  <strong>Figure 5:</strong> Index distribution in <code>Experiment5</code>
+</p>
 
 
 ## Conclusion
