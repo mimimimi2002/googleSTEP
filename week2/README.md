@@ -44,9 +44,11 @@ We create a tool that can visualize the hash map by putting table size and numbe
 
 The color is calculated by
 
-R: 255
-G: (1 - number of the keys / total number of keys) * 255
-B: (1 - number of the keys / total number of keys) * 255
+Red (R): always `255`
+
+Green (G): `(1 - number of the keys / total number of keys) * 255`
+
+Blue (B): `(1 - number of the keys / total number of keys) * 255`
 
 If the index holds nothing, the color is white, if the index holds all the keys, the color is maximum red.
 
