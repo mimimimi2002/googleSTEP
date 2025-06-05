@@ -233,10 +233,10 @@
     const width = Math.floor(Math.sqrt(bucketSize));
     const height = Math.floor(Math.sqrt(bucketSize));
 
-    const pixelSize = window.innerWidth / width;
+    const pixelSize = 600 / width;
 
     const canvas = document.getElementById('canvas');
-    canvas.width = window.innerWidth;
+    canvas.width = width * pixelSize;
     canvas.height = height * pixelSize;
     const ctx = canvas.getContext('2d');
 
