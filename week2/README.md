@@ -266,6 +266,19 @@ We will use Rolling Hash as hash number.
 ## Conclusion
 Good hash function is one that produces unique number and has a variety of range and way bigger than the bucket size. Regarding table size, it seems it doesn't matter the size is prime number but as long as it is odd number and hash function is good enough to distribute, it works.
 
+## The method used in homework1
+In homework1, we used the original hash function from `Experiment2` and when resizing, make sure that the hash table's size is odd number but we didn't care whether it is prime number.
+
+This is the graph that shows how much it takes to put the random string that is ranged from 0 to 99999999 and get the each item for 10000 times. We consider this is one iteration and did 100 iterations and keep adding 10000 items to the hash map for each iteration.
+
+<p align="center">
+  <img src="./homework1_result.png" alt="homework1 result graph" width="300"/>
+  <br>
+  <strong>Figure 6:</strong> The runtime of test in homework1
+</p>
+
+If we did not use the appropriate hash function and hash table size, the collision makes the runtime longer and usually it is O(N). However, using the original hash function that produces unique number and odd number as the table size, we successfully make the insertion of the element and get the element with O(1) time complexity.
+
 # Homework2
 This is the answer why tree structure is more likely to be used when it comes to storing a huge data compared to hash map.
 
