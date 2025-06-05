@@ -85,7 +85,7 @@ Result: Variance : 7.36, Max: 12, Min: 0
 
 Result: Variance : 8340.83, Max: 9810, Min: 0
 
-![result1_large](./experiment1_large_size.png)
+<img src="./experiment1_large_size.png" alt="result1_small" width="300"/>
 
 This does apply to the large number where it reqires the large number as hash number.
 
@@ -109,11 +109,16 @@ return hash;
 
 Result: Variance : 1.02, Max: 4, Min: 0
 
+<img src="./experiment2_small_size.png" alt="result2_small" width="300"/>
+
 - Hash table size 100003
 - Number of keys 100000
 - Range of key, 10000000
 
 Result: Variance : 1.02, Max: 9, Min: 0
+
+<img src="./experiment2_large_size.png" alt="result3_large" width="300"/>
+
 
 3. Hash table: Rolling hash: Table size: prime number
 This is a common hash that does not occur the collision using the idea of converting to another base. In this way, the small number will be changed to corresponding number in that base.
@@ -133,11 +138,17 @@ return hash;
 
 Result: Variance : 0.82, Max: 3, Min: 0
 
+<img src="./experiment3_small_size.png" alt="result3_small" width="300"/>
+
+
 - Hash table size 100003
 - Number of keys 100000
 - Range of key, 10000000
 
 Result: Variance : 1.00, Max: 8, Min: 0
+
+<img src="./experiment3_large_size.png" alt="result3_large" width="300"/>
+
 
 ## Result
 Take into account that the hash number is unique and has a variety of range and make sure that the number is way bigger than the bucket size, it is more easy to distribute the index of bucket. Using prime number in hash function and bucket size is also efficeint way.
@@ -155,13 +166,19 @@ We will use Rolling Hash as hash number.
 
 Result: Variance : 6.82, Max: 21, Min: 0
 
-4. Hash table: Rolling hash: Table size: odd number
+<img src="./experiment4.png" alt="result4" width="300"/>
+
+
+5. Hash table: Rolling hash: Table size: odd number
 
 - Hash table size 99999
 - Number of keys 99999
 - Range of key, 10000000
 
 Result: Variance : 1.02, Max: 8, Min: 0
+
+<img src="./experiment5.png" alt="result5" width="300"/>
+
 
 ## Conclusion
 Good hash function is one that produces unique number and has a variety of range and way bigger than the bucket size. Regarding table size, it seems it doesn't matter the size is prime number but as long as it is odd number and hash function is good enough to distribute, it works.
