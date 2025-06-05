@@ -77,11 +77,15 @@ return hash;
 
 Result: Variance : 7.36, Max: 12, Min: 0
 
+![result1_small](./experiment1_small_size.png)
+
 - Hash table size 100003
 - Number of keys 100000
 - Range of key, 10000000
 
 Result: Variance : 8340.83, Max: 9810, Min: 0
+
+![result1_large](./experiment1_large_size.png)
 
 This does apply to the large number where it reqires the large number as hash number.
 
@@ -141,13 +145,17 @@ Take into account that the hash number is unique and has a variety of range and 
 ## Further question
 If the hash function is good enough which can produce unique number, does table size matter? Is it still ok even you use the even number?
 How about odd number, does it matter to be a prime number?
-We will use Rolling Hash as hash number
+We will use Rolling Hash as hash number.
+
+4. Hash table: Rolling hash: Table size: even number
 
 - Hash table size 100000
 - Number of keys 100000
 - Range of key, 10000000
 
 Result: Variance : 6.82, Max: 21, Min: 0
+
+4. Hash table: Rolling hash: Table size: odd number
 
 - Hash table size 99999
 - Number of keys 99999
