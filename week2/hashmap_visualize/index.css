@@ -7,3 +7,25 @@
   justify-content: center;
   align-items: center;
 }
+
+
+.circle {
+  display: inline-block;      /* ensures it's treated as a box */
+  width: 12px;                /* or any size you want */
+  height: 12px;               /* same as width */
+  border-radius: 50%;         /* makes it a circle */
+  background-color: white;    /* or any color */
+  vertical-align: middle;     /* aligns with the text */
+  margin-right: 6px;
+  border: black;
+  border: 1px solid black;
+}
+
+
+.circle.active {
+  background-color: gray;
+}
+
+.hidden {
+  display: none;
+}
