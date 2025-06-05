@@ -17,7 +17,7 @@ Each bucket holds a linked list that stores a pair of key and value which has th
 
 `index = hash_function(key) % bucket_size`
 
-## Resize
+## Resize Hash Table
 Hash map has a issue with memeory where if the items are almost full of hash map, increase the size of hashmap and if the items only take up small amout of hash map,
 decrease the sisze of hashmap.
 This time, I implement this by increasing the size when the number of items takes up 70 % of bucket size and decreasing the size when it takes up 30 % of bucket size.
@@ -40,7 +40,7 @@ Also, it needs to be distributed to prevent the numbers from clustering around c
 
 ## A tool to visualize hash map
 Although we predict some of the features of the hash function and the size of hash map can contribute to the distribution of index of table, it is challenging to visualize how these features can affect the distribution.
-We create a tool that can visualize the hash map by putting table size and number of keys and range of key (we conver the number that is range between 0 to this number and conver to string as input) and how to implement hash map and output the two kind of way to visualize hashmap, one is the grids with numbers with dense red color as the numbers that index holds is large. The other is to　dot the canvas with red point.
+We create a tool that can visualize the hash map by putting table size and number of keys and range of key (we conver the number that is range between 0 to this number and conver to string as input) and how to implement hash map and output the two kind of way to visualize hashmap, one is the grids with numbers with dense red color as the numbers that index holds is large. The other is to dot the canvas with red point.
 
 ### How to use the tool to visualize hash map?
 1. visit `https://mimimimi2002.github.io/googleSTEP/`
@@ -254,3 +254,31 @@ We will use Rolling Hash as hash number.
 
 ## Conclusion
 Good hash function is one that produces unique number and has a variety of range and way bigger than the bucket size. Regarding table size, it seems it doesn't matter the size is prime number but as long as it is odd number and hash function is good enough to distribute, it works.
+
+# Homework3, 4
+## Overview
+Cashe is common idea that is used to store a certain amount of data especially for recent data. This time we implemented a cache that can store recent N websites including its url and contetns. To ignore that we will need the order from recent website to old website, we can store into hash map to achieve adding and deleting and seaching with O(1) time complexity. However, we need to keep track of the history and also change the order whenever we access the new pate.
+
+To store the history, we have two main data structure, array and linked list.
+Array can hold the order of time by index as well as linked list can hold the order by
+pointing to the next node or previous node.
+Considering that for array adding takes O(1) and O(N) if the resize is needed, and deleting takes O(N), and searching for O(N), even though we store the index for each element in hash table, to resizing and moving the elements after deleting still remain issues.
+
+On the other hand, the linked list takes O(1) to add new element to head, and deleting the last node for O(1) if we have a tail pointer to keep track the last node. We ususllay come across the problem that searching takes O(N) because we need to search from the first node.
+
+Then we came up with an idea that what if we store the key and its node in hash table so that we don't need to search from the head to the specific node we want to delete.
+
+## Implementation with linked list and hash table
+Linked list: the list of Website node that has its url and contents and next pointer to point to older website node and previous pointer to point to newer website node.
+
+Hash table: Hash table with n size and hold url as key and Website node as value.
+
+To achieve cashe, we have several features for it.
+
+1. If there is no same url as the new visited page in the cache, add the new pair of (url, contents) to the head and delete the oldest node.
+First, use hash table to search the key(O(1)). Then make the tail pointer point to the previous node (O(1)). Then add the new node to the head (O(1)).
+
+
+2. If there is the same url in the cache already, delete the node and make the node to the head. First, use hash table to search the key(O(1)) and if they find the key, take the node it is coresponded. Delete the node (O(1)) and add the node to the head(O(1)).
+As they delete the node from linked list , delete the node from hash table as well (O(1)) and after make it to the head, add the updated node to the hash table(O(1)).
+
