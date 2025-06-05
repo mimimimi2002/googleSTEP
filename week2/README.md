@@ -255,6 +255,9 @@ We will use Rolling Hash as hash number.
 ## Conclusion
 Good hash function is one that produces unique number and has a variety of range and way bigger than the bucket size. Regarding table size, it seems it doesn't matter the size is prime number but as long as it is odd number and hash function is good enough to distribute, it works.
 
+# Homework2
+This is the answer why tree structure is more likely to be used when it comes to storing a huge data compared to hash map.
+
 # Homework3, 4
 ## Overview
 Cashe is common idea that is used to store a certain amount of data especially for recent data. This time we implemented a cache that can store recent N websites including its url and contetns. To ignore that we will need the order from recent website to old website, we can store into hash map to achieve adding and deleting and seaching with O(1) time complexity. However, we need to keep track of the history and also change the order whenever we access the new pate.
