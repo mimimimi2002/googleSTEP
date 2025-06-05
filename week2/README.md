@@ -40,7 +40,16 @@ Also, it needs to be distributed to prevent the numbers from clustering around c
 
 ## A tool to visualize hash map
 Although we predict some of the features of the hash function and the size of hash map can contribute to the distribution of index of table, it is challenging to visualize how these features can affect the distribution.
-We create a tool that can visualize the hash map by putting table size and number of keys and range of key (we conver the number that is range between 0 to this number and conver to string as input) and how to implement hash map and output the two kind of way to visualize hashmap, one is the grids with numbers with dense red color as the numbers that index holds is large. The other is to dot the canvas with red point.
+We create a tool that can visualize the hash map by putting table size and number of keys and range of key (we conver the number that is range between 0 to this number and conver to string as input) and how to implement hash map and output the two kind of way to visualize hashmap, one is the grids with numbers with red color and the other is the dot of canvas with red point. The color density aligns with the ratio of number of keys with same index to the total number of keys.
+
+The color is calculated by
+
+R: 255
+G: (1 - number of the keys / total number of keys) * 255
+B: (1 - number of the keys / total number of keys) * 255
+
+If the index holds nothing, the color is white, if the index holds all the keys, the color is maximum red.
+
 
 ### How to use the tool to visualize hash map?
 1. visit `https://mimimimi2002.github.io/googleSTEP/`
