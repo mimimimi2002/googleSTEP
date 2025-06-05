@@ -272,7 +272,7 @@ In homework1, we used the original hash function from `Experiment2` and when res
 This is the graph that shows how much it takes to put the random string that is ranged from 0 to 99999999 and get the each item for 10000 times. We consider this is one iteration and did 100 iterations and keep adding 10000 items to the hash map for each iteration.
 
 <p align="center">
-  <img src="./homework1_result.png" alt="homework1 result graph" width="300"/>
+  <img src="./homework1_result.png" alt="homework1 result graph"/>
   <br>
   <strong>Figure 6:</strong> The runtime of test in homework1
 </p>
