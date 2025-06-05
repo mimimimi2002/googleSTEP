@@ -58,7 +58,7 @@ We create a tool that can visualize the hash map by putting table size and numbe
 ## Experiments
 There are several senarios we can test if it is good hash function and good hash table size. In the following explanation, ord(c) means the ascii code for c character.
 
-1. Hash function : (index + 1) * ord(c) Table size:　prime number
+### Experiment1. Hash function : (index + 1) * ord(c) Table size:　prime number
 
 Considerinig that "alice" and "elica" is the same if their ascii codes are added.
 If there is a factor that the order matters to create a unique hash number.
@@ -81,7 +81,7 @@ Result: Variance : 7.36, Max: 12, Min: 0
 <p align="center">
   <img src="./experiment1_small_size.png" alt="Index distribution in experiment1 with small table size" width="300"/>
   <br>
-  <strong>Figure 1:</strong> Index distribution in <code>experiment1</code> with small table size
+  <strong>Figure 1:</strong> Index distribution in <code>Experiment1</code> with small table size
 </p>
 
 
