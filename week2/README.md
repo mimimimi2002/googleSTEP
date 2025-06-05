@@ -64,7 +64,8 @@ There are several senarios we can test if it is good hash function and good hash
 Considerinig that "alice" and "elica" is the same if their ascii codes are added.
 If there is a factor that the order matters to create a unique hash number.
 
-hash_function:
+#### Small table size
+##### Hash Function
 ```
 let hash = 0;
 for (let i = 0; i < key.length; i++) {
@@ -73,11 +74,15 @@ for (let i = 0; i < key.length; i++) {
 return hash;
 ```
 
+#### Settings
 - Hash table size 101
 - Number of keys 100
 - Range of key 100000
 
-Result: Variance : 7.36, Max: 12, Min: 0
+#### Results
+- Variance : 7.36
+- Max number of same index: 12
+- Min number of same index : 0
 
 <p align="center">
   <img src="./experiment1_small_size.png" alt="Index distribution in experiment1 with small table size" width="300"/>
