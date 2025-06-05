@@ -1,11 +1,36 @@
-"use strict";
+const width = 256;
+const height = 256;
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 
-(function() {
+canvas.width = width;
+canvas.height = height;
+
+const imageData = ctx.createImageData(width, height);
+const data = imageData.data;
+
+for (let y = 0; y < height; y++) {
+  for (let x = 0; x < width; x++) {
+    const index = (y * width + x) * 4;
+
+    // Example: brightness based on position (diagonal gradient)
+    const brightness = (x + y) / 2;
+
+    data[index] = brightness;     // Red
+    data[index + 1] = brightness; // Green
+    data[index + 2] = brightness; // Blue
+    data[index + 3] = 255;        // Alpha (fully opaque)
+  }
+}
+
+ctx.putImageData(imageData, 0, 0);
+(function () {
 
   // MODULE GLOBAL VARIABLES, CONSTANTS, AND HELPER FUNCTIONS CAN BE PLACED HERE
   let bucketSize;
   let testSize;
   let inputRange;
+  let hash_function;
   /**
    * Add a function that will be called when the window is loaded.
    */
@@ -58,9 +83,17 @@
     }
   }
 
+  // function hash_function(key) {
+  //   let hash = 0;
+  //   const prime_numbers = [23, 29, 31, 37, 41, 43, 47, 53]
+  //   for (let i = 0; i < key.length; i++) {
+  //     hash += prime_numbers[i] * prime_numbers[i] * (key[i].charCodeAt(0));
+  //   }
+  //   return 1;
+  // }
   function show_color(dict) {
     // First, find the max count for normalization
-    console.log(dict)
+    console.log(dict);
     let maxCount = 0;
     for (const count of dict.values()) {
       if (count > maxCount) maxCount = count;
@@ -93,7 +126,7 @@
     }
 
     if (mode === "canvas-mode") {
-      draw_campus(dict, bucketSize);
+      draw_campus(dict);
     }
     if (mode === "number-mode") {
       show_grids_with_numbers(bucketSize);
@@ -111,24 +144,20 @@
     let new_hash_function = evaluate_hash_function(hashFunction);
     console.log(new_hash_function("hello"));
 
-    calculate_hash(testSize, inputRange, bucketSize, "number-mode", new_hash_function);
     calculate_hash(testSize, inputRange, bucketSize, "canvas-mode", new_hash_function);
+    calculate_hash(testSize, inputRange, bucketSize, "number-mode", new_hash_function);
 
     show_modes();
   }
 
   function evaluate_hash_function(inputBody) {
     try {
-      const wrappedCode = `
-      function hash_function(key) {
-        ${inputBody}
-      }
-    `;
-      const wrapper = new Function(wrappedCode + "; return hash_function;");
-      const fn = wrapper();
+      // Wrap the code and evaluate it
+      console.log(inputBody);
+      eval(inputBody); // Now `hash_function` is defined
 
-      if (typeof fn === "function") {
-        return fn;
+      if (typeof hash_function === "function") {
+        return hash_function;
       } else {
         alert("No valid function found.");
       }
@@ -143,19 +172,29 @@
     let modes = qs(".modes");
     modes.classList.remove("hidden");
 
-    let numberMode = qs("#number-mode");
-    numberMode.classList.add("active");
     let canvasMode = qs("#canvas-mode");
-    canvasMode.classList.remove("active");
-    let canvas = qs("#canvas");
-    canvas.classList.add("hidden");
-    let numbers = qs(".numbers");
-    numbers.classList.remove("hidden");
+    canvasMode.classList.add("active");
+  }
+
+  function show_grids(bucketSize) {
+    const grids = qs(".grids");
+    grids.innerHTML = "";
+
+    for (let i = 0; i < bucketSize; i++) {
+      const numberButton = document.createElement("div");
+      numberButton.className = "number-button";
+      numberButton.style.width = '20px';
+      numberButton.style.height = '20px';
+      numberButton.style.display = 'inline-block'; // makes them sit side by side
+      numberButton.id = i;
+      grids.appendChild(numberButton);
+
+    }
   }
 
   function show_grids_with_numbers(bucketSize) {
     const grids = qs(".numbers");
-    grids.innerHTML = ""
+    grids.innerHTML = "";
 
     for (let i = 0; i < bucketSize; i++) {
       const numberButton = gen("button");
@@ -163,22 +202,22 @@
 
       // Add classes and styles
       numberButton.className = 'w-full h-full';
-      numberButton.className = "number-button"
+      numberButton.className = "number-button";
       numberButton.style.width = '50px';
       numberButton.style.height = '50px';
-      numberButton.id = i
+      numberButton.id = i;
       grids.appendChild(numberButton);
     }
   }
 
-  function draw_campus(dict, bucketSize) {
-    const width = Math.sqrt(bucketSize)
-    const height =  Math.sqrt(bucketSize);
+  function draw_campus(dict) {
+    const width = 512;
+    const height = 512;
     const canvas = id('canvas');
     const ctx = canvas.getContext('2d');
 
-    canvas.width = Math.sqrt(bucketSize);
-    canvas.height = Math.sqrt(bucketSize);
+    canvas.width = width;
+    canvas.height = height;
 
     const imageData = ctx.createImageData(width, height);
     const data = imageData.data;
@@ -199,28 +238,13 @@
 
       const pixelIndex = index * 4;
 
-      data[pixelIndex] = 255;     // Red
+      data[pixelIndex] = 255; // Red
       data[pixelIndex + 1] = colorValue; // Green
       data[pixelIndex + 2] = colorValue; // Blue
-      data[pixelIndex + 3] = 255;        // Alpha (fully opaque)
+      data[pixelIndex + 3] = 255; // Alpha (fully opaque)
     }
 
     ctx.putImageData(imageData, 0, 0);
-
-    const aspectRatio = width / height;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const windowAspectRatio = windowWidth / windowHeight;
-
-    if (windowAspectRatio > aspectRatio) {
-      // Window is wider than canvas aspect ratio
-      canvas.style.height = windowHeight + 'px';
-      canvas.style.width = (windowHeight * aspectRatio) + 'px';
-    } else {
-      // Window is taller than canvas aspect ratio
-      canvas.style.width = windowWidth + 'px';
-      canvas.style.height = (windowWidth / aspectRatio) + 'px';
-    }
   }
 
   /** ------------------------------ Helper Functions  ------------------------------ */
@@ -228,7 +252,6 @@
    * Note: You may use these in your code, but remember that your code should not have
    * unused functions. Remove this comment in your own code.
    */
-
   /**
    * Returns the element that has the ID attribute with the specified value.
    * @param {string} idName - element ID

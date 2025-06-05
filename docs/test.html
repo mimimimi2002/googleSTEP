@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Mode Selector</title>
+  <style>
+    .mode-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid gray;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .circle.active {
+      background-color: gray;
+    }
+  </style>
+</head>
+<body>
+  <div class="mode-selector">
+    <div class="circle active" data-mode="red"></div>
+    <div class="circle" data-mode="green"></div>
+    <div class="circle" data-mode="blue"></div>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const width = 256;
+    const height = 256;
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = width;
+    canvas.height = height;
+
+    const modeButtons = document.querySelectorAll('.circle');
+    let currentMode = 'red';
+
+    function generateData() {
+      const dict = new Map();
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const index = y * width + x;
+          dict.set(index, Math.random() * 100);
+        }
+      }
+      return dict;
+    }
+
+    function show_color(dict, mode) {
+      const imageData = ctx.createImageData(width, height);
+      const data = imageData.data;
+
+      let maxCount = 0;
+      for (const count of dict.values()) {
+        if (count > maxCount) maxCount = count;
+      }
+
+      for (const [index, count] of dict.entries()) {
+        const brightness = count / maxCount;
+        const colorValue = Math.floor(255 * (1 - brightness));
+        const pixelIndex = index * 4;
+
+        data[pixelIndex] = mode === 'red' ? 255 : colorValue;
+        data[pixelIndex + 1] = mode === 'green' ? 255 : colorValue;
+        data[pixelIndex + 2] = mode === 'blue' ? 255 : colorValue;
+        data[pixelIndex + 3] = 255;
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+    }
+
+    // Initial display
+    const dict = generateData();
+    show_color(dict, currentMode);
+
+    // Click event handling
+    modeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        modeButtons.forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        currentMode = button.dataset.mode;
+        show_color(dict, currentMode);
+      });
+    });
+  </script>
+</body>
+</html>
