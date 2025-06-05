@@ -80,8 +80,42 @@
     }
   }
 
+  function show_results(dict) {
+    const results = qs(".results");
+    results.classList.remove("hidden");
+    // Calculate variance and standard deviation
+    let counts = [];
+    let total = 0;
 
-  function calculate_hash(testSize, inputRange, bucketSize, mode, new_hash_function) {
+    // Gather counts of all buckets (fill 0 if missing)
+    for (let i = 0; i < bucketSize; i++) {
+      const count = dict.get(i) || 0;
+      counts.push(count);
+      total += count;
+    }
+
+    const mean = total / bucketSize;
+
+    // Variance = average squared difference from the mean
+    const variance = counts.reduce((acc, c) => acc + (c - mean) ** 2, 0) / bucketSize;
+
+    // Standard deviation = sqrt(variance)
+    const stddev = Math.sqrt(variance);
+
+    id("mean").textContent = mean.toFixed(2);
+    id("variance").textContent = variance.toFixed(2);
+    id("standard-deviation").textContent = stddev.toFixed(2);
+    id("max-size").textContent = Math.max(...counts)
+    id("min-size").textContent = Math.min(...counts)
+    console.log(`Mean bucket size: ${mean.toFixed(2)}`);
+    console.log(`Variance: ${variance.toFixed(2)}`);
+    console.log(`Standard deviation: ${stddev.toFixed(2)}`);
+    console.log(`Max bucket size: ${Math.max(...counts)}`);
+    console.log(`Min bucket size: ${Math.min(...counts)}`);
+  }
+
+
+  function calculate_hash(testSize, inputRange, bucketSize, new_hash_function) {
     const dict = new Map();
     for (let i = 0; i < testSize; i++) {
       const rand = Math.floor(Math.random() * inputRange); // random int [0, 99999999]
@@ -92,13 +126,7 @@
       dict.set(index, current + 1);
     }
 
-    if (mode === "canvas-mode") {
-      draw_campus(dict, bucketSize);
-    }
-    if (mode === "number-mode") {
-      show_grids_with_numbers(bucketSize);
-      show_color(dict);
-    }
+    return dict;
   }
 
 
@@ -111,10 +139,18 @@
     let new_hash_function = evaluate_hash_function(hashFunction);
     console.log(new_hash_function("hello"));
 
-    calculate_hash(testSize, inputRange, bucketSize, "number-mode", new_hash_function);
-    calculate_hash(testSize, inputRange, bucketSize, "canvas-mode", new_hash_function);
+    const dict = calculate_hash(testSize, inputRange, bucketSize, new_hash_function);
+
+    // draw campus
+    draw_campus(dict, bucketSize);
+
+    // draw grid numbers
+    show_grids_with_numbers(bucketSize);
+    show_color(dict);
 
     show_modes();
+
+    show_results(dict);
   }
 
   function evaluate_hash_function(inputBody) {
@@ -172,8 +208,8 @@
   }
 
   function draw_campus(dict, bucketSize) {
-    const width = Math.sqrt(bucketSize)
-    const height =  Math.sqrt(bucketSize);
+    const width = Math.floor(Math.sqrt(bucketSize));
+    const height = Math.floor(Math.sqrt(bucketSize));
     const canvas = id('canvas');
     const ctx = canvas.getContext('2d');
 
