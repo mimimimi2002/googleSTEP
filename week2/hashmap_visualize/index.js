@@ -76,7 +76,7 @@
 
       // Convert brightness to a color if the index has many elements, the color will be closer to blue.
       const colorValue = Math.floor(255 * (1 - brightness));
-      button.style.backgroundColor = `rgb(255, ${colorValue}, ${colorValue})`; // Blueish gradient
+      button.style.backgroundColor = `rgb(255, ${colorValue}, ${colorValue})`; // Red gradient
     }
   }
 
