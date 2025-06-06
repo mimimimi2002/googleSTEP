@@ -13,14 +13,14 @@
 # Homework1
 ## Overview
 Implement hash function. We have a hashmap table(bucket) with the size of 97 as default.
-Each bucket holds a linked list that stores a pair of key and value which has the same calculated hash. This calculated by our own hash_function and get the index of bucket by the remainder when divided by the bucket size.
+Each bucket holds a linked list that stores a pair of key and value which has the same calculated hash. This is calculated by our own hash_function and get the index of bucket by the remainder when divided by the bucket size.
 
 `index = hash_function(key) % bucket_size`
 
 ## Resize Hash Table
-Hash map has a issue with memeory where if the items are almost full of hash map, increase the size of hashmap and if the items only take up small amout of hash map,
-decrease the sisze of hashmap.
-This time, I implement this by increasing the size when the number of items takes up 70 % of bucket size and decreasing the size when it takes up 30 % of bucket size.
+Hash map needs a flexibility with memeory where if the items are almost full of hash map, increase the size of hashmap and if the items only take up small amout of hash map,
+decrease the size of hashmap.
+This time, I implemented this by increasing the size when the number of items takes up 70 % of the bucket size and decreasing the size when it takes up 30 % of bucket size.
 
 ## Hash function
 Hash function calculates the hash number which is a number that represents the key.
@@ -36,11 +36,11 @@ Therefore, I expect that the odd number and if it is prime number, it can distri
 
 ### What is good hash function?
 Ideally, the hash function will not produce the same number if the key is different.
-Also, it needs to be distributed to prevent the numbers from clustering around certain values. We use ascii code for each character in string to create a hash number for that string.
+Also, it needs to be distributed to prevent the numbers from clustering around certain values. We use ascii code for each character in the string to create a hash number for that string.
 
 ## A tool to visualize hash map
 Although we predict some of the features of the hash function and the size of hash map can contribute to the distribution of index of table, it is challenging to visualize how these features can affect the distribution.
-We create a tool that can visualize the hash map by putting table size and number of keys and range of key (we conver the number that is range between 0 to this number and conver to string as input) and how to implement hash map and output the two kind of way to visualize hashmap, one is the grids with numbers with red color and the other is the dot of canvas with red point. The color density aligns with the ratio of number of keys with same index to the total number of keys.
+We create a tool that can visualize the hash map by putting table size and number of keys and range of key (we convert the number that is ranged between 0 to this number and convert it to string as input) and how to implement hash map and output the two kind of way to visualize hashmap, one is the grids with numbers with red color and the other is the dot of canvas with red point. The color density aligns with the ratio of number of keys with same index to the total number of keys.
 
 The color is calculated by
 
