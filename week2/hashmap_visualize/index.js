@@ -11,13 +11,6 @@
    */
   window.addEventListener("load", init);
 
-  /**
-   * Initializes the event listeners for the task and section buttons.
-   * The "Add Task" button is linked to the addTask function, and
-   * the "Add Section" button is linked to the addSection function.
-   * This sets the buttons for creating new tasks and sections
-   * on the webpage.
-   */
   function init() {
     let testButton = id("test-button");
     testButton.addEventListener("click", click_test_button);
