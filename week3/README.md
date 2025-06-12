@@ -78,20 +78,53 @@ Implement to compute the equation including +, -, *, / and '()' and several func
 Let's break down this probelm using recursive descent parsing.
 
 P(Parentheses): (E)
+
 L(Literal): Int | Float
+
 F(Factor):  - F | L  | P | func P
+
 T(Term): F | T * F | T / F
+
 E(Expression): T | E + T | E - T
 
 Based on this rule, we will break the equation down.
 
 ## What is the motivation to create recursive descent parsing above?
-The Expression(whole equation) has a different priority for calculating, first of all plus and - should be the least priority for calculating so we can decompose Expression into T | E + T | E - T.
+The Expression(whole equation) has a different priority for calculating, first of all `+` and `-` should be the least priority for calculating so we can decompose Expression into T | E + T | E - T.
+
+Then we have a `*` and `/` as next important for calculating so we can decompose Term into F | T * F | T / F.
+
+Next, Factor is minimum unit as it can be independed itself. We have - F | L  | P | func P where P represents '(' E ')'.
 
 
-### Why E - T not T - E
+### Why E - T not T - E, T * F not F * T
 Even though E - E seems ok for analyzing equation, there is a huge trap. For example,
 
 `3 - 4 + 9` -> `3 - 13` -> `-10`
 
-This equation is not correct because even though + and - has the same priority, we need to calculate from left to right, which means we need to consider left side of `-` as an Expression and right side as Term.
+This equation is not correct because even though + and - has the same priority, we need to calculate from left to right, which means we need to consider left side of `-` as an Expression and right side as Term. Same as T * F, where right side of `*` should be Factor and left side should be Term.
+
+# How to implement recursive descent parsing above?
+1. parse_expression function
+This function parses expression. First, we need to be careful about E + T and E - T because we need to iterate from the back to find the `+` and `-`.
+Then decompose to expression and term and add or sbstract them.
+
+Also, we need to skip index if it is inside the parentheses. For example
+`(4 + 3)` cannot be decomposed to `(4`, `+`, `3)`.
+
+Finally, we need to skip the situation where we find `-` as the first index because we want to deal with this in Factor.
+
+If there is not `+` and `-` operation, then parse it as Term.
+
+2. parse_term function
+This function parses term. First, we need to be careful about T * F and T * F because we need to iterate from the back to find the `*` and `/`.
+Then decompose to Term and Factor and mutiply or divide them.
+
+Same as parse_expression, skip inside of parentheses and if there is not `*` and `/`,
+then parse it as Factor
+
+3. parse_factor function
+This function parses factor. Factor can be - F, or L or P or func P, so based on the the type of the first index, divide into each case to get the answer.
+
+4. parse_parenthese function
+This function parses parentheses. Parentheses consits of '(' Expression ')' we decompose these three parts and get the answer of Expression.
