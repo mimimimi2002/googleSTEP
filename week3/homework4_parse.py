@@ -1,23 +1,6 @@
 #! /usr/bin/python3
 
 def read_number(line, index):
-  """
-  Given a string of number and the start of index of the string of number and
-  return the token that represents number and the index after going through
-  all the characters in the given string of number.
-
-  Args:
-      line (string): a string of number including integer and float number
-      index (int): the start of index of the string of number
-
-  Returns:
-      dictionary: the token that represents the given string of number
-                  ex {'type' : 'NUMBER', 'number': 8}
-                     {'type' : 'NUMBER', 'number': 12.455}
-      int: the index after going through all the characters in the given string of number.
-
-  """
-
   number = 0
 
   while index < len(line) and line[index].isdigit(): # read integer part
@@ -50,72 +33,22 @@ def read_plus(index):
 
 
 def read_minus(index):
-  """
-  Given the index of minus symbol and return token that represents minus
-  and the next index.
-
-  Args:
-      index (int): index of minus symbol
-
-  Returns:
-      dictionary: token that represents minus, {'type': 'MINUS'}
-  """
   token = {'type': 'MINUS'}
   return token, index + 1
 
 def read_times(index):
-  """
-  Given the index of minus symbol and return token that represents times
-  and the next index.
-
-  Args:
-      index (int): index of times symbol
-
-  Returns:
-      dictionary: token that represents times, {'type': 'TIMES'}
-  """
   token = {'type': 'TIMES'}
   return token, index + 1
 
 def read_divide(index):
-  """
-  Given the index of minus symbol and return token that represents divide
-  and the next index.
-
-  Args:
-      index (int): index of divide symbol
-
-  Returns:
-      dictionary: token that represents divide, {'type': 'DIVIDE'}
-  """
   token = {'type': 'DIVIDE'}
   return token, index + 1
 
 def read_parentheses_right(index):
-  """
-  Given the index of minus symbol and return token that represents right parentheses
-  and the next index.
-
-  Args:
-      index (int): index of right parentheses symbol
-
-  Returns:
-      dictionary: token that represents right parentheses, {'type': 'PARENTHESES_RIGHT'}
-  """
   token = {'type': 'PARENTHESES_RIGHT'}
   return token, index + 1
 
 def read_parentheses_left(index):
-  """
-  Given the index of minus symbol and return token that represents left parentheses
-  and the next index.
-
-  Args:
-      index (int): index of left parentheses symbol
-
-  Returns:
-      dictionary: token that represents left parentheses, {'type': 'PARENTHESES_LEFT'}
-  """
   token = {'type': 'PARENTHESES_LEFT'}
   return token, index + 1
 
@@ -135,17 +68,6 @@ def read_function(line, index):
     exit(1)
 
 def tokenize(line):
-  """
-  Given the string of equation and returns a list of toekns that represents this equation.
-  If the line contains the invalid characters, print Invalid character found: character
-
-  Args:
-      line (string): string of equation
-
-  Returns:
-      list: list of dictionary that represents this equation
-            ex) [{'type' : 'PLUS'}, {'type': 'NUMBER', 'number' : 15}]
-  """
   tokens = []
   index = 0
   while index < len(line):
