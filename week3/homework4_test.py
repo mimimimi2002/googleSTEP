@@ -69,19 +69,18 @@ def run_test():
     test("(4*5/2)-(1/2)+(2+3/2)")
     test("(4*5/2)-(1/2)+(2+3/2)*(4.1*(5.4-2.0))-1/2+((2+3)/2)*2")
 
-    # calculate_special_function (function, calculate_parentheses_per_set)
+    # calculate_per_special_function (function, calculate_parentheses_per_set)
     # each special function
     test("abs(12.3)")
     test("int(12.3)")
     test("round(12.3)")
+    test("round(12.3+3)")
+    test("round((4.1*(5.4-2.0))-1/2+((2+3)/2)*2)")
 
+    # calculate_all_special_function (calculate_per_special_function * n -> four_operation_function)
     # mutiple special function
     test("round(12.3)+int(3.2)")
 
-    # special function (calculate_special_function -> calculate_parentheses_all_set -> four_operation_function)
-    test("round(12.3+3)")
-    test("round((4.1*(5.4-2.0))-1/2+((2+3)/2)*2)")
-    test("round(12.3)+int(3.2)")
     print("==== Test finished! ====\n")
 if __name__ == "__main__":
   run_test()
