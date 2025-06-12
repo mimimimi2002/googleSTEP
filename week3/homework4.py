@@ -352,8 +352,6 @@ def evaluate(tokens):
   # want to call until there is not parentheses
   tokens = calculate_parentheses_all_set(index, tokens)
 
-  print(tokens)
-
   # Get the answer of computed reuslt of the equation only with four operations
   return calculate_four_operation(index, tokens)
 
