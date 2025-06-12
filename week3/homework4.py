@@ -18,16 +18,6 @@ def read_number(line, index):
 
 
 def read_plus(index):
-  """
-  Given the index of plus symbol and return token that represents plus
-  and the next index.
-
-  Args:
-      index (int): index of plus symbol
-
-  Returns:
-      dictionary: token that represents plus, {'type': 'MINUS'}
-  """
   token = {'type': 'PLUS'}
   return token, index + 1
 
@@ -94,49 +84,51 @@ def tokenize(line):
       tokens.append(token)
   return tokens
 
-def parse_parentheses(index, tokens):
+def parse_parentheses(tokens):
+  index = 0
   if tokens[index]['type'] == 'PARENTHESES_LEFT' and tokens[-1]['type'] == 'PARENTHESES_RIGHT':
-    answer = parse_expression(0, tokens[index + 1: -1])
+    answer = parse_expression(tokens[index + 1: -1])
     return answer
   else:
     print('Invalid syntax')
     exit(1)
 
-def parse_factor(index, tokens):
+def parse_factor(tokens):
+    index = 0
     if tokens[index]['type'] == 'NUMBER':
       answer = tokens[index]['number']
       return answer
 
     elif tokens[index]['type'] == 'MINUS':
-      answer = (-1) *  parse_factor(0, tokens[index + 1:])
+      answer = (-1) *  parse_factor(tokens[index + 1:])
       return answer
 
     elif tokens[index]['type'] == 'FUNCTION':
       f_name = tokens[index]['name'].lower()
-      result = parse_parentheses(0, tokens[index+1:])
+      result = parse_parentheses(tokens[index+1:])
       result_evaluate = eval(f"{f_name}({result})")
       return result_evaluate
     elif tokens[index]['type'] == 'PARENTHESES_LEFT':
-      answer = parse_parentheses(0, tokens)
+      answer = parse_parentheses(tokens)
       return answer
     else:
         print('Invalid syntax')
         exit(1)
 
-def parse_term(index, tokens):
+def parse_term(tokens):
   parentheses_right_stack = []
   answer = 0
   index = len(tokens) - 1
   while index >= 0:
       if len(parentheses_right_stack) == 0:
         if tokens[index]['type'] == 'TIMES':
-            factor1 = parse_term(0, tokens[:index])
-            factor2 = parse_factor(0, tokens[index + 1:])
+            factor1 = parse_term(tokens[:index])
+            factor2 = parse_factor(tokens[index + 1:])
             answer = factor1 * factor2
             return answer
         elif tokens[index]['type'] == 'DIVIDE':
-            factor1 = parse_term(0, tokens[:index])
-            factor2 = parse_factor(0, tokens[index + 1:])
+            factor1 = parse_term(tokens[:index])
+            factor2 = parse_factor(tokens[index + 1:])
             answer = factor1 / factor2
             return answer
       if tokens[index]['type'] == 'PARENTHESES_RIGHT':
@@ -147,10 +139,10 @@ def parse_term(index, tokens):
             exit(1)
           parentheses_right_stack.pop()
       index -= 1
-  answer = parse_factor(0, tokens)
+  answer = parse_factor(tokens)
   return answer
 
-def parse_expression(index, tokens):
+def parse_expression(tokens):
   answer = 0
   index = len(tokens) - 1
 
@@ -158,13 +150,13 @@ def parse_expression(index, tokens):
   while index >= 0:
       if len(parentheses_right_stack) == 0:
         if tokens[index]['type'] == 'PLUS':
-            term1 = parse_expression(0, tokens[:index])
-            term2 = parse_term(0, tokens[index + 1:])
+            term1 = parse_expression(tokens[:index])
+            term2 = parse_term(tokens[index + 1:])
             answer = term1 + term2
             return answer
         elif index != 0 and tokens[index]['type'] == 'MINUS':
-            term1 = parse_expression(0, tokens[:index])
-            term2 = parse_term(0, tokens[index + 1:])
+            term1 = parse_expression(tokens[:index])
+            term2 = parse_term(tokens[index + 1:])
             answer = term1 - term2
             return answer
       if tokens[index]['type'] == 'PARENTHESES_RIGHT':
@@ -176,15 +168,12 @@ def parse_expression(index, tokens):
           parentheses_right_stack.pop()
 
       index -= 1
-  answer = parse_term(0, tokens)
+  answer = parse_term(tokens)
   return answer
 
 def evaluate(tokens):
-  # Insert a dummy '+' token
-  # need to specify the place it is inserted
-  index = 0
 
-  answer = parse_expression(index, tokens)
+  answer = parse_expression(tokens)
   return answer
 
 def test(line):
