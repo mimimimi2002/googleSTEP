@@ -303,25 +303,29 @@ def calculate_parentheses_per_set(index, tokens):
     index += 1
   return tokens, index, None
 
-def calculate_special_function(index, tokens):
+def calculate_all_special_function(index, tokens):
   while index < len(tokens) - 2: # can delete the possibility that they don't have parentheses
     if tokens[index]['type'] == 'FUNCTION':
-      function_index = index
-      f_name = tokens[index]['name'].lower()
-      if tokens[index + 1]['type'] == 'PARENTHESES_LEFT':
-        print("before" , tokens)
-        tokens, index, result = calculate_parentheses_per_set(index + 1, tokens)
-        print(result)
-        result_function = eval(f"{f_name}({result})")
-        tokens.pop(function_index)
-        tokens.pop(function_index)
-        tokens.insert(function_index, {'type': "NUMBER", 'number': result_function})
-        index = function_index
-
-      else:
-        print("Invalid syntax")
-    index += 1
+      tokens, next_index = calculate_per_special_function(index, tokens)
+      index = next_index
+    else:
+      index += 1
   return tokens
+
+def calculate_per_special_function(index, tokens):
+  function_index = index
+  f_name = tokens[index]['name'].lower()
+  if tokens[index + 1]['type'] == 'PARENTHESES_LEFT':
+    print("before" , tokens)
+    tokens, index, result = calculate_parentheses_per_set(index + 1, tokens)
+    print(result)
+    result_function = eval(f"{f_name}({result})")
+    tokens.pop(function_index)
+    tokens.pop(function_index)
+    tokens.insert(function_index, {'type': "NUMBER", 'number': result_function})
+    index = function_index
+
+  return tokens, index + 1
 
 def evaluate(tokens):
   """
@@ -345,7 +349,7 @@ def evaluate(tokens):
   tokens.insert(0, {'type': 'PLUS'})
   index = 1
 
-  tokens = calculate_special_function(index, tokens)
+  tokens = calculate_all_special_function(index, tokens)
 
   # Replace the parentheses part with the computed result of the equation that is
   # inside of parentheses.
