@@ -1,6 +1,7 @@
 import sys
 import collections
 from collections import deque
+import random
 
 class Wikipedia:
 
@@ -24,6 +25,9 @@ class Wikipedia:
         # from the page whose ID is 1234.
         self.links = {}
 
+        # A set of page that has no links to other pages
+        self.id_with_no_children = []
+
         # Read the pages file into self.titles.
         with open(pages_file) as file:
             for line in file:
@@ -46,11 +50,16 @@ class Wikipedia:
                 self.links[src].append(dst)
         print("Finished reading %s" % links_file)
 
+        for id, link in self.links.items():
+          if len(link) == 0:
+            self.id_with_no_children.append(id)
+
         # calculate page ranks so that this will not be called whenever searching
         # the popular page.
         self.ids_sorted_by_popularity = self.calculate_page_ranks()
+
         print()
-  
+
     def calculate_variation(self, old_page_ranks, new_page_ranks):
       if len(old_page_ranks) != len(new_page_ranks):
         print("Old page ranks and new page ranks have different length")
@@ -65,32 +74,39 @@ class Wikipedia:
 
       return variation
 
-    def calculate_page_ranks (self):
+    def calculate_page_ranks (self, p = 0.85):
       while True:
 
         # set old page ranks and empty new page ranks
         old_page_ranks = self.id_to_page_ranks
         new_page_ranks = {}
 
-        # distribute ranks to its children
+        distribute_to_all_page_ranks = 0
+        for id in self.id_with_no_children:
+          distribute_to_all_page_ranks += old_page_ranks[id] / len(old_page_ranks)
+
         for id, old_page_rank in old_page_ranks.items():
           if id not in new_page_ranks:
             new_page_ranks[id] = 0
 
-          # if there is no children, not distribut but remains in the same node
+          # if there is no children, not distribute but remains in the same node
           if len(self.links[id]) == 0:
-            new_page_ranks[id] += old_page_rank
             continue
 
-          # get distributed rank
+          # get distributed ratio
           distribute_ratio = 1 / len(self.links[id])
 
           # add the distributed rank to its children
+          # only add to 85% of children
           for child_id in self.links[id]:
             if child_id not in new_page_ranks:
               new_page_ranks[child_id] = 0
-            new_page_ranks[child_id] += old_page_rank * distribute_ratio
+            new_page_ranks[child_id] += old_page_rank * distribute_ratio * p
 
+          distribute_to_all_page_ranks += old_page_ranks[id] * (1 - p) / len(old_page_ranks)
+
+        for id, new_page_rank in new_page_ranks.items():
+          new_page_ranks[id] += distribute_to_all_page_ranks
         # if the variation difference is small enough, then break
         if self.calculate_variation(old_page_ranks, new_page_ranks) < 0.01:
           break
@@ -99,10 +115,10 @@ class Wikipedia:
         self.id_to_page_ranks = new_page_ranks
 
         # check if the total page ranks remain the same
-        # total = 0
-        # for id, page_ranks in self.id_to_page_ranks.items():
-        #   total += page_ranks
-        # print("total", total)
+        total = 0
+        for id, page_ranks in self.id_to_page_ranks.items():
+          total += page_ranks
+        print("total", total)
 
       sorted_ids = sorted(self.id_to_page_ranks, key=lambda x: self.id_to_page_ranks[x], reverse=True)
       return sorted_ids
