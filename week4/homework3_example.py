@@ -115,11 +115,12 @@ class Wikipedia:
 
       visited_id[start_id] = True
       next_id = {}
+      maximum_path_memo = {}
 
       # call recursion to renew next_id, in next_id, we have
       # key as id and the next_id that connects from id.
       # ex: {4: 5, 5: 6}, then it means 4 -> 5 -> 6
-      self.find_child_with_maximum_path(start_id, goal_id, visited_id, next_id)
+      self.find_child_with_maximum_path(start_id, goal_id, visited_id, next_id, maximum_path_memo)
 
       # get the actual path
       if start_id in next_id:
@@ -130,7 +131,10 @@ class Wikipedia:
     # return a pair of the next node and the maximum path from node_id to goal_id
     # ex: (4, 10), this means 4 is one of the node_id's child and has the longest
     # path as 10 in all children.
-    def find_child_with_maximum_path(self, node_id, goal_id, visited_id, next_id):
+    def find_child_with_maximum_path(self, node_id, goal_id, visited_id, next_id, maximum_path_memo):
+      if node_id in maximum_path_memo:
+        return maximum_path_memo[node_id]
+
       if node_id == goal_id:
         return 0
 
@@ -141,7 +145,7 @@ class Wikipedia:
           visited_id[child_id] = True # visit one of the children
 
           # get the maximum path from the child to goal
-          maximum_path = self.recursion(child_id, goal_id, visited_id, next_id)
+          maximum_path = self.find_child_with_maximum_path(child_id, goal_id, visited_id, next_id, maximum_path_memo)
 
           # if this path cannot reach to goal, return (child_id, -1),
           # if not return (child_id, maximum_path + 1),
@@ -157,11 +161,13 @@ class Wikipedia:
 
       # if there is no child, return -1
       if len(paths) == 0:
+        maximum_path_memo[node_id] = -1
         return -1
 
       # set the next node_id to the node that has maximum path
-      next_id[node_id] = max(paths, key=lambda x: x[1])[0]
-      return max(paths, key=lambda x: x[1])[1]
+      next_id[node_id], max_length = max(paths, key=lambda x: x[1])
+      maximum_path_memo[node_id] = max_length
+      return max_length
 
 
     # Helper function for Homework #3:
