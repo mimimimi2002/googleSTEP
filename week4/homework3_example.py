@@ -119,7 +119,7 @@ class Wikipedia:
       # call recursion to renew next_id, in next_id, we have
       # key as id and the next_id that connects from id.
       # ex: {4: 5, 5: 6}, then it means 4 -> 5 -> 6
-      self.recursion(start_id, goal_id, visited_id, next_id)
+      self.find_child_with_maximum_path(start_id, goal_id, visited_id, next_id)
 
       # get the actual path
       if start_id in next_id:
@@ -130,7 +130,7 @@ class Wikipedia:
     # return a pair of the next node and the maximum path from node_id to goal_id
     # ex: (4, 10), this means 4 is one of the node_id's child and has the longest
     # path as 10 in all children.
-    def recursion(self, node_id, goal_id, visited_id, next_id):
+    def find_child_with_maximum_path(self, node_id, goal_id, visited_id, next_id):
       if node_id == goal_id:
         return 0
 
