@@ -67,29 +67,45 @@ class Wikipedia:
 
     def calculate_page_ranks (self):
       while True:
+
+        # set old page ranks and empty new page ranks
         old_page_ranks = self.id_to_page_ranks
         new_page_ranks = {}
+
+        # distribute ranks to its children
         for id, old_page_rank in old_page_ranks.items():
           if id not in new_page_ranks:
             new_page_ranks[id] = 0
+
+          # if there is no children, not distribut but remains in the same node
           if len(self.links[id]) == 0:
+            new_page_ranks[id] += old_page_rank
             continue
-          distribute_rank = 1 / len(self.links[id])
+
+          # get distributed rank
+          distribute_ratio = 1 / len(self.links[id])
+
+          # add the distributed rank to its children
           for child_id in self.links[id]:
             if child_id not in new_page_ranks:
               new_page_ranks[child_id] = 0
-            new_page_ranks[child_id] += old_page_rank * distribute_rank
-        print(self.calculate_variation(old_page_ranks, new_page_ranks))
-        if self.calculate_variation(old_page_ranks, new_page_ranks) < 0.00001:
+            new_page_ranks[child_id] += old_page_rank * distribute_ratio
+
+        # if the variation difference is small enough, then break
+        if self.calculate_variation(old_page_ranks, new_page_ranks) < 0.01:
           break
+
+        # renew the page ranks
         self.id_to_page_ranks = new_page_ranks
 
-        total = 0
-        for id, page_ranks in self.id_to_page_ranks.items():
-          total += page_ranks
+        # check if the total page ranks remain the same
+        # total = 0
+        # for id, page_ranks in self.id_to_page_ranks.items():
+        #   total += page_ranks
+        # print("total", total)
 
-        sorted_ids = sorted(self.id_to_page_ranks, key=lambda x: self.id_to_page_ranks[x], reverse=True)
-        return sorted_ids
+      sorted_ids = sorted(self.id_to_page_ranks, key=lambda x: self.id_to_page_ranks[x], reverse=True)
+      return sorted_ids
 
     # Example: Find the longest titles.
     def find_longest_titles(self):
