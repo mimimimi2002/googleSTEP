@@ -98,36 +98,37 @@ class Wikipedia:
           exit(1)
         start_id = self.title_to_id[start]
         goal_id = self.title_to_id[goal]
-        previous_id = self.find_long_path(start_id, goal_id)
+        path = self.find_long_path(start_id, goal_id)
+        print(" -> ".join(path))
 
-        if goal_id in previous_id:
-          path = self.find_path(goal_id, previous_id)
+        # if goal_id in previous_id:
+        #   path = self.find_path(goal_id, previous_id)
 
-          # extend path, try to find the long path between two nodes and extend it
-          path = self.extend_path(start_id, goal_id, previous_id, path)
-          print(" -> ".join(path))
-          print(len(path))
-        else:
-          print("Not found")
+        #   # extend path, try to find the long path between two nodes and extend it
+        #   # path = self.extend_path(start_id, goal_id, previous_id, path)
+        #   print(" -> ".join(path))
+        #   print(len(path))
+        # else:
+        #   print("Not found")
 
-    def extend_path(self, start_id, node_id, previous_id, path):
-      index = 0
-      extended_paths = []
-      while node_id != start_id:
-        sub_previous_id = self.find_long_path(previous_id[node_id], node_id)
-        extended_path = self.find_path(node_id, sub_previous_id)
-        print(extended_path)
-        if index == 0:
-          combined = path[:-2] + extended_path
-        else:
-          combined = path[:- (index + 2)] + extended_path + path[-(index) :]
-        print(combined)
-        if len(combined) == len(set(combined)):
-          extended_paths.append(combined)
-        index += 1
-        node_id = previous_id[node_id]
+    # def extend_path(self, start_id, node_id, previous_id, path):
+    #   index = 0
+    #   extended_paths = []
+    #   while node_id != start_id:
+    #     sub_previous_id = self.find_long_path(previous_id[node_id], node_id)
+    #     extended_path = self.find_path(node_id, sub_previous_id)
+    #     print(extended_path)
+    #     if index == 0:
+    #       combined = path[:-2] + extended_path
+    #     else:
+    #       combined = path[:- (index + 2)] + extended_path + path[-(index) :]
+    #     print(combined)
+    #     if len(combined) == len(set(combined)):
+    #       extended_paths.append(combined)
+    #     index += 1
+    #     node_id = previous_id[node_id]
 
-      return max(extended_paths, key=lambda x:len(x))
+    #   return max(extended_paths, key=lambda x:len(x))
 
     # Homework #3 (optional):
     # Search the longest path with heuristics.
@@ -142,16 +143,19 @@ class Wikipedia:
 
         queue.append(start_id)
         visited_id[start_id] = True
-        first_goal = True
+        count = 0
+        paths = []
 
         while len(queue) > 0:
           node_id = queue.popleft()
           if node_id == goal_id:
-              if first_goal == False:
-                break
+              if count == 10000:
+                return max(paths, key=lambda x:len(x))
               else:
-                first_goal = False
+                path = self.find_path(goal_id, previous_id)
+                paths.append(path)
                 visited_id[node_id] = False
+                count += 1
                 continue
           for child_id in self.links[node_id]:
             if child_id not in visited_id or visited_id[child_id] == False:
