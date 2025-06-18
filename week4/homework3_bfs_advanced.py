@@ -103,12 +103,14 @@ class Wikipedia:
 
         # 経路をどんどん長くする
         second_path = self.find_long_path(start_id, goal_id)
-        print(second_path)
+        print(second_path, len(second_path))
+        extended_index = [(0, len(second_path) - 1)]
 
         # 元の経路と、延長した経路が同じ長さでない限り、延長し続ける
         while True:
             previous_path = second_path
-            second_path = self.extend_path(previous_path)
+            # 後ろから数えた時の延長した部分
+            second_path, extended_index = self.extend_path(previous_path, extended_index)
 
             if len(second_path) <= len(previous_path):
                 break  # Stop if path did not get longer
@@ -120,30 +122,53 @@ class Wikipedia:
         print(" -> ".join(second_path))
         print(len(second_path))
 
+    def get_combined_path(self, start_index , end_index , path, new_extended_index):
+      # 後ろから順に隣接する二つのパスを延長する、それを追加したときに、延長したパスに重複がなければ、元のパスと置き換える。
+      start_id = self.title_to_id[path[start_index]]
+      goal_id = self.title_to_id[path[end_index]]
+      extended_path = self.find_long_path(start_id, goal_id)
+
+      if end_index == len(path) - 1:
+        combined = path[:-2] + extended_path
+      else:
+        combined = path[: start_index] + extended_path + path[end_index + 1:]
+
+      # もし重複がなければ、元のパスと置き換える、もしあれば、置き換えず続行
+      if len(combined) == len(set(combined)):
+        print("not duplicate")
+        new_extended_index.append((len(path) - 1 - end_index, len(path) - 1 - end_index + len(extended_path) - 1))
+        print(combined)
+        return combined
+      return path
+
     # 見つけたパスを後ろから順に二つの隣同士のパスをさらに延長する
     # これを延長できなくなるまで続ける
     # 例： 秋葉原-> 新宿-> 池袋.   => 秋葉原-> 新宿->渋谷->山手線-> 池袋. => 秋葉原->焼肉きんぐ-> 新宿->渋谷->山手線-> 池袋.
-    def extend_path(self, path):
-      index = len(path) - 1
-      while index - 1 >= 0:
+    def extend_path(self, path, extended_index):
+      original_length = len(path)
 
-        # 後ろから順に隣接する二つのパスを延長する、それを追加したときに、延長したパスに重複がなければ、元のパスと置き換える。
-        start_id = self.title_to_id[path[index - 1]]
-        goal_id = self.title_to_id[path[index]]
-        extended_path = self.find_long_path(start_id, goal_id)
+      new_extended_index = []
+      count_from_back = 0
+      extend_index_count = 0
+      print(extended_index)
 
-        if index == len(path) - 1:
-          combined = path[:-2] + extended_path
+      while count_from_back < original_length and extend_index_count < len(extended_index):
+        print(original_length - 1 - count_from_back)
+
+        if count_from_back == extended_index[extend_index_count][0]:
+          while count_from_back < extended_index[extend_index_count][1]:
+            end_index = original_length - 1 - count_from_back
+            start_index = original_length - 1 - count_from_back - 1
+            path = self.get_combined_path(start_index, end_index, path, new_extended_index)
+            print(start_index, end_index)
+            count_from_back += 1
+          extend_index_count += 1
+
         else:
-          combined = path[: index - 1] + extended_path + path[index + 1: ]
+          count_from_back += 1
 
-        # もし重複がなければ、元のパスと置き換える、もしあれば、置き換えず続行
-        if len(combined) == len(set(combined)):
-          print("not duplicate")
-          path = combined
-        index -= 1
 
-      return path
+      return path, new_extended_index
 
     # startとgoalが直接繋がっていると仮定した時に、直接ではないもう一つのパスを返す関数
     def find_long_path(self, start_id, goal_id):
