@@ -2,6 +2,7 @@ import sys
 import collections
 from collections import deque
 import random
+import copy
 
 class Wikipedia:
 
@@ -98,8 +99,15 @@ class Wikipedia:
           exit(1)
         start_id = self.title_to_id[start]
         goal_id = self.title_to_id[goal]
-        path = self.find_long_path(start_id, goal_id)
+        paths_previous_ids = self.find_long_path(start_id, goal_id, extend_mode=False)
+        longest_path, corresponding_prev = max(paths_previous_ids, key=lambda x: len(x[0]))
+
+        # extend path using the same way.
+        # example, ..-> ..-> 新宿 -> 池袋 then, get the longer path for 新宿 -> 池袋
+        # then replace it with longer path.
+        path = self.extend_path(start_id, goal_id, corresponding_prev, longest_path)
         print(" -> ".join(path))
+        print(len(path))
 
         # if goal_id in previous_id:
         #   path = self.find_path(goal_id, previous_id)
@@ -111,30 +119,36 @@ class Wikipedia:
         # else:
         #   print("Not found")
 
-    # def extend_path(self, start_id, node_id, previous_id, path):
-    #   index = 0
-    #   extended_paths = []
-    #   while node_id != start_id:
-    #     sub_previous_id = self.find_long_path(previous_id[node_id], node_id)
-    #     extended_path = self.find_path(node_id, sub_previous_id)
-    #     print(extended_path)
-    #     if index == 0:
-    #       combined = path[:-2] + extended_path
-    #     else:
-    #       combined = path[:- (index + 2)] + extended_path + path[-(index) :]
-    #     print(combined)
-    #     if len(combined) == len(set(combined)):
-    #       extended_paths.append(combined)
-    #     index += 1
-    #     node_id = previous_id[node_id]
+    # パスの延長
+    # 最初に見つけた長いパスを後ろから順に二つの隣同士のパスをさらに延長する
+    # 例： 秋葉原-> 新宿-> 池袋.   => 秋葉原-> 新宿->渋谷->山手線-> 池袋. => => 秋葉原->焼肉きんぐ-> 新宿->渋谷->山手線-> 池袋.
+    def extend_path(self, start_id, node_id, previous_id, path):
+      index = 0
+      while node_id != start_id:
+        paths_previous_ids = self.find_long_path(previous_id[node_id], node_id, extend_mode=True)
+        for i in range(len(paths_previous_ids)):
+          extended_path, extended_previous_id = paths_previous_ids[i]
+          print(extended_path)
+          if index == 0:
+            combined = path[:-2] + extended_path
+          else:
+            combined = path[:- (index + 2)] + extended_path + path[-(index) :]
+          print(combined)
+          if len(combined) == len(set(combined)):
+            print("not duplicate")
+            path = combined
+            index += len(extended_path) - 2
+            break
+        index += 1
+        node_id = previous_id[node_id]
 
-    #   return max(extended_paths, key=lambda x:len(x))
+      return path
 
     # Homework #3 (optional):
     # Search the longest path with heuristics.
     # 'start': A title of the start page.
     # 'goal': A title of the goal page.
-    def find_long_path(self, start_id, goal_id):
+    def find_long_path(self, start_id, goal_id, extend_mode = False):
 
       # use bfs
         queue = deque()
@@ -144,25 +158,34 @@ class Wikipedia:
         queue.append(start_id)
         visited_id[start_id] = True
         count = 0
-        paths = []
+        paths_previous_ids = []
+
+        if extend_mode:
+          max_count = 5
+        else:
+          max_count = 1000
+        print(max_count)
+
 
         while len(queue) > 0:
           node_id = queue.popleft()
+          visited_id[node_id] = True
           if node_id == goal_id:
-              if count == 10000:
-                return max(paths, key=lambda x:len(x))
+              path = self.find_path(goal_id, previous_id)
+              paths_previous_ids.append((path, copy.deepcopy(previous_id)))
+              if count == max_count:
+                return paths_previous_ids
               else:
-                path = self.find_path(goal_id, previous_id)
-                paths.append(path)
                 visited_id[node_id] = False
                 count += 1
                 continue
           for child_id in self.links[node_id]:
             if child_id not in visited_id or visited_id[child_id] == False:
-              visited_id[node_id] = True
               queue.append(child_id)
               previous_id[child_id] = node_id
-        return previous_id
+        if len(paths_previous_ids) == 0:
+          return ([start_id, goal_id], previous_id)
+        return paths_previous_ids
 
 
 
