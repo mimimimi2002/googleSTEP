@@ -99,56 +99,54 @@ class Wikipedia:
           exit(1)
         start_id = self.title_to_id[start]
         goal_id = self.title_to_id[goal]
-        paths_previous_ids = self.find_long_path(start_id, goal_id, extend_mode=False)
-        longest_path, corresponding_prev = max(paths_previous_ids, key=lambda x: len(x[0]))
+        second_path = self.find_long_path(start_id, goal_id)
 
-        # extend path using the same way.
-        # example, ..-> ..-> 新宿 -> 池袋 then, get the longer path for 新宿 -> 池袋
-        # then replace it with longer path.
-        path = self.extend_path(start_id, goal_id, corresponding_prev, longest_path)
-        print(" -> ".join(path))
-        print(len(path))
+        # 経路をどんどん長くする
+        second_path = self.find_long_path(start_id, goal_id)
+        print(second_path)
 
-        # if goal_id in previous_id:
-        #   path = self.find_path(goal_id, previous_id)
+        # 元の経路と、延長した経路が同じ長さでない限り、延長し続ける
+        while True:
+            previous_path = second_path
+            second_path = self.extend_path(previous_path)
 
-        #   # extend path, try to find the long path between two nodes and extend it
-        #   # path = self.extend_path(start_id, goal_id, previous_id, path)
-        #   print(" -> ".join(path))
-        #   print(len(path))
-        # else:
-        #   print("Not found")
+            if len(second_path) <= len(previous_path):
+                break  # Stop if path did not get longer
 
-    # パスの延長
-    # 最初に見つけた長いパスを後ろから順に二つの隣同士のパスをさらに延長する
-    # 例： 秋葉原-> 新宿-> 池袋.   => 秋葉原-> 新宿->渋谷->山手線-> 池袋. => => 秋葉原->焼肉きんぐ-> 新宿->渋谷->山手線-> 池袋.
-    def extend_path(self, start_id, node_id, previous_id, path):
-      index = 0
-      while node_id != start_id:
-        paths_previous_ids = self.find_long_path(previous_id[node_id], node_id, extend_mode=True)
-        for i in range(len(paths_previous_ids)):
-          extended_path, extended_previous_id = paths_previous_ids[i]
-          print(extended_path)
-          if index == 0:
-            combined = path[:-2] + extended_path
-          else:
-            combined = path[:- (index + 2)] + extended_path + path[-(index) :]
-          print(combined)
-          if len(combined) == len(set(combined)):
-            print("not duplicate")
-            path = combined
-            index += len(extended_path) - 2
-            break
-        index += 1
-        node_id = previous_id[node_id]
+            print("longest")
+            print(" -> ".join(second_path))
+            print(len(second_path))
+        print("answer")
+        print(" -> ".join(second_path))
+        print(len(second_path))
+
+    # 見つけたパスを後ろから順に二つの隣同士のパスをさらに延長する
+    # これを延長できなくなるまで続ける
+    # 例： 秋葉原-> 新宿-> 池袋.   => 秋葉原-> 新宿->渋谷->山手線-> 池袋. => 秋葉原->焼肉きんぐ-> 新宿->渋谷->山手線-> 池袋.
+    def extend_path(self, path):
+      index = len(path) - 1
+      while index - 1 >= 0:
+
+        # 後ろから順に隣接する二つのパスを延長する、それを追加したときに、延長したパスに重複がなければ、元のパスと置き換える。
+        start_id = self.title_to_id[path[index - 1]]
+        goal_id = self.title_to_id[path[index]]
+        extended_path = self.find_long_path(start_id, goal_id)
+
+        if index == len(path) - 1:
+          combined = path[:-2] + extended_path
+        else:
+          combined = path[: index - 1] + extended_path + path[index + 1: ]
+
+        # もし重複がなければ、元のパスと置き換える、もしあれば、置き換えず続行
+        if len(combined) == len(set(combined)):
+          print("not duplicate")
+          path = combined
+        index -= 1
 
       return path
 
-    # Homework #3 (optional):
-    # Search the longest path with heuristics.
-    # 'start': A title of the start page.
-    # 'goal': A title of the goal page.
-    def find_long_path(self, start_id, goal_id, extend_mode = False):
+    # startとgoalが直接繋がっていると仮定した時に、直接ではないもう一つのパスを返す関数
+    def find_long_path(self, start_id, goal_id):
 
       # use bfs
         queue = deque()
@@ -157,35 +155,32 @@ class Wikipedia:
 
         queue.append(start_id)
         visited_id[start_id] = True
-        count = 0
-        paths_previous_ids = []
+        first_goal = True
 
-        if extend_mode:
-          max_count = 5
-        else:
-          max_count = 1000
-        print(max_count)
-
+        print("finding longer path" , self.titles[start_id], self.titles[goal_id])
 
         while len(queue) > 0:
           node_id = queue.popleft()
           visited_id[node_id] = True
           if node_id == goal_id:
               path = self.find_path(goal_id, previous_id)
-              paths_previous_ids.append((path, copy.deepcopy(previous_id)))
-              if count == max_count:
-                return paths_previous_ids
+
+              # 最初に見つけたパスでない時にパスを返す
+              if first_goal == False:
+                return path
+              # 最初に見つけたパスの時は、goalを一旦visitedからはずし、
+              # 探索を再開する
               else:
+                first_goal = False
                 visited_id[node_id] = False
-                count += 1
                 continue
           for child_id in self.links[node_id]:
             if child_id not in visited_id or visited_id[child_id] == False:
               queue.append(child_id)
               previous_id[child_id] = node_id
-        if len(paths_previous_ids) == 0:
-          return ([start_id, goal_id], previous_id)
-        return paths_previous_ids
+
+        path = self.find_path(goal_id, previous_id)
+        return path
 
 
 
