@@ -122,8 +122,9 @@ class Wikipedia:
             print(" -> ".join(second_path))
             print("length: ", len(second_path))
 
+    # 後ろから順に隣接する二つのパスを延長する、それを追加したときに、延長したパスに重複がなければ、元のパスと置き換える。
+    # ただし前回のループで延長しなかった部分は調べても意味ないので、飛ばすようにする (new_extended_indexに前回延長した部分のindexの情報が入っている)
     def get_combined_path(self, start_index , end_index , path, new_extended_index, find_count):
-      # 後ろから順に隣接する二つのパスを延長する、それを追加したときに、延長したパスに重複がなければ、元のパスと置き換える。
       start_id = self.title_to_id[path[start_index]]
       goal_id = self.title_to_id[path[end_index]]
       extended_paths = self.find_long_path(start_id, goal_id, find_count)
@@ -134,7 +135,8 @@ class Wikipedia:
         else:
           combined = path[: start_index] + extended_path + path[end_index + 1:]
 
-        # もし重複がなければ、元のパスと置き換える、もしあれば、置き換えず続行
+        # もし直接パス以外の候補の中で、延長したあとに
+        # # 重複がなければ、元のパスと置き換える、もしあれば、置き換えず続行
         if len(combined) == len(set(combined)):
           print("not duplicate")
           new_extended_index.append((len(path) - 1 - end_index, len(path) - 1 - end_index + len(extended_path) - 1))
