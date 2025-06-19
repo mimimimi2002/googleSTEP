@@ -100,7 +100,7 @@ class Wikipedia:
         start_id = self.title_to_id[start]
         goal_id = self.title_to_id[goal]
 
-        # 経路をどんどん長くする
+        # 最初の二つ目のパスを探す
         second_path = self.find_long_path(start_id, goal_id, find_count=1)[0]
         print(second_path, len(second_path))
         extended_index = [(0, len(second_path) - 1)]
@@ -110,9 +110,11 @@ class Wikipedia:
         while True:
             print("find_count", find_count)
             previous_path = second_path
-            # 後ろから数えた時の延長した部分
+
+            # second_pathを後ろから順々に延長する
             second_path, extended_index = self.extend_path(previous_path, extended_index, find_count)
 
+            # もしパスが伸びなかったら、候補のパスの数を増やしてループを続行
             if len(second_path) <= len(previous_path):
                 find_count *= 2
                 extended_index = [(0, len(second_path) - 1)]
@@ -170,6 +172,7 @@ class Wikipedia:
       return path, new_extended_index
 
     # startとgoalが直接繋がっていると仮定した時に、直接ではないもう一つのパスを返す関数
+    # 直接パス以外のfind_count分のパスのリストを返す関数
     def find_long_path(self, start_id, goal_id, find_count = 5):
 
       # use bfs
