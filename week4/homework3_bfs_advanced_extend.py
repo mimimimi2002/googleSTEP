@@ -93,96 +93,78 @@ class Wikipedia:
         path.reverse()
         return path
 
+    # find the longest path from start to goal
+    # print a list of path whenever it is extended
     def find_longest_path(self, start, goal):
-        if start not in self.title_to_id or goal not in self.title_to_id:
-          print("Start or goal is not in page dictionary")
-          exit(1)
-        start_id = self.title_to_id[start]
-        goal_id = self.title_to_id[goal]
 
-        # 最初の二つ目のパスを探す
-        second_path = self.find_long_path(start_id, goal_id)
-        print(second_path, len(second_path))
-        extended_index = [(0, len(second_path) - 1)]
+      # get start id and goal id, if not, exit
+      if start not in self.title_to_id or goal not in self.title_to_id:
+        print("Start or goal is not in page dictionary")
+        exit(1)
+      start_id = self.title_to_id[start]
+      goal_id = self.title_to_id[goal]
 
-        # 元の経路と、延長した経路が同じ長さでない限り、延長し続ける
-        while True:
-            previous_path = second_path
+      # get the second shortest path between start and goal
+      second_path = self.find_long_path(start_id, goal_id)
+      print(second_path, len(second_path))
 
-            # second_pathを後ろから順々に延長する
-            second_path, extended_index = self.extend_path(previous_path, extended_index)
+      # extend the path from back with two nodes that are next to each other
+      # extend the path as long as it is longer than original path
+      while True:
+          previous_path = second_path
 
-            # もしパスが伸びなかったら、候補のパスの数を増やしてループを続行
-            if len(second_path) <= len(previous_path):
-                break
-            print("longest")
-            print(" -> ".join(second_path))
-            print("length: ", len(second_path))
+          # extend all the nodes that are next to each other
+          extended_path_to_all_nodes_next_to_each_other = self.extend_path(previous_path)
 
-    # 後ろから順に隣接する二つのパスを延長する、それを追加したときに、延長したパスに重複がなければ、元のパスと置き換える。
-    # ただし前回のループで延長しなかった部分は調べても意味ないので、飛ばすようにする (new_extended_indexに前回延長した部分のindexの情報が入っている)
-    def get_combined_path(self, start_index , end_index , path, new_extended_index):
-      start_id = self.title_to_id[path[start_index]]
-      goal_id = self.title_to_id[path[end_index]]
+          # if the extended path is longer than the orignial path, break the loop
+          if len(second_path) <= len(previous_path):
+              break
+          print("longest")
+          print(" -> ".join(second_path))
+          print("length: ", len(second_path))
 
-      visited_id = {}
 
-      for node in path:
-        visited_id[self.title_to_id[node]] = True
+    # extend the path from back, compare two nodes from back and extend them
+    def extend_path(self, path):
+      index = len(path) - 1
+      while index - 1 >= 0:
 
-      visited_id[start_id] = False
-      visited_id[goal_id] = False
+        # two nodes that are next to each other from back
+        start_id = self.title_to_id[path[index - 1]]
+        goal_id = self.title_to_id[path[index]]
 
-      extended_path = self.find_long_path(start_id, goal_id, visited_id)
-      print(extended_path)
+        # put the all the id of current path to visited_id
+        visited_id = {}
+        for node in path:
+          visited_id[self.title_to_id[node]] = True
 
-      if end_index == len(path) - 1:
-        combined = path[:-2] + extended_path
-      else:
-        combined = path[: start_index] + extended_path + path[end_index + 1:]
+        # make the start id and goal id to unvisited
+        visited_id[start_id] = False
+        visited_id[goal_id] = False
 
-      # もし直接パス以外の候補の中で、延長したあとに
-      # # 重複がなければ、元のパスと置き換える、もしあれば、置き換えず続行
-      if len(combined) == len(set(combined)):
-        print("not duplicate")
-        new_extended_index.append((len(path) - 1 - end_index, len(path) - 1 - end_index + len(extended_path) - 1))
-        print(combined)
-        print("combined length: ", len(combined))
-        return combined
+        print(index-1, index)
+
+        # use the visited id, it will return the path that will not duplicate the current path.
+        extended_path = self.find_long_path(start_id, goal_id, visited_id)
+
+        if index == len(path) - 1:
+          combined = path[:-2] + extended_path
+        else:
+          combined = path[: index - 1] + extended_path + path[index + 1: ]
+
+        # if it still has duplicate node, do not extend
+        # if there is duplicate node, extend it
+        if len(combined) == len(set(combined)):
+          print("not duplicate")
+          path = combined
+          print(combined)
+          print("combined length: ", len(combined))
+        index -= 1
+
       return path
 
-    # 見つけたパスを後ろから順に二つの隣同士のパスをさらに延長する
-    # これを延長できなくなるまで続ける
-    # 例： 秋葉原-> 新宿-> 池袋.   => 秋葉原-> 新宿->渋谷->山手線-> 池袋. => 秋葉原->焼肉きんぐ-> 新宿->渋谷->山手線-> 池袋.
-    def extend_path(self, path, extended_index):
-      original_length = len(path)
-
-      new_extended_index = []
-      count_from_back = 0
-      extend_index_count = 0
-      print(extended_index)
-
-      while count_from_back < original_length and extend_index_count < len(extended_index):
-        print(original_length - 1 - count_from_back)
-
-        if count_from_back == extended_index[extend_index_count][0]:
-          while count_from_back < extended_index[extend_index_count][1]:
-            end_index = original_length - 1 - count_from_back
-            start_index = original_length - 1 - count_from_back - 1
-
-            path = self.get_combined_path(start_index, end_index, path, new_extended_index)
-            print(start_index, end_index)
-            count_from_back += 1
-          extend_index_count += 1
-
-        else:
-          count_from_back += 1
-
-
-      return path, new_extended_index
-
-    # startとgoalが直接繋がっていると仮定した時に、直接ではないもう一つのパスを返す関数
-    # 直接パス以外のfind_count分のパスのリストを返す関数
+    # if the start id and goal id has direct path, return
+    # the second shortest path that goes from start to goal
     def find_long_path(self, start_id, goal_id, visited_id = {}):
 
         # use bfs
@@ -202,18 +184,17 @@ class Wikipedia:
           if node_id == goal_id:
               path = self.find_path(goal_id, previous_id)
 
-              # 最初に見つけたパスでない時にパスを返す
+              # if it is the second time to reach to the goal, return its path
               if first_goal  == False:
                 return path
 
-              # 最初に見つけたパスの時は、goalを一旦visitedからはずし、
-              # 探索を再開する
+              # if it is first time to find the goal,
+              # make the goal node unvisited and restart the search again
               else:
-                visited_id[node_id] = False # visitedからgoalを外す
-
+                visited_id[node_id] = False
                 first_goal = False
-
                 continue
+
           for child_id in self.links[node_id]:
             if child_id not in visited_id or visited_id[child_id] == False:
               queue.append(child_id)
