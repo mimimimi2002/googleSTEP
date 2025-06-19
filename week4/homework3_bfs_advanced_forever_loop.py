@@ -115,6 +115,7 @@ class Wikipedia:
 
             if len(second_path) <= len(previous_path):
                 find_count *= 2
+                extended_index = [(0, len(second_path) - 1)]
             print("longest")
             print(" -> ".join(second_path))
             print("length: ", len(second_path))
