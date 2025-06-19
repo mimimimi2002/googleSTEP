@@ -84,12 +84,15 @@ class Wikipedia:
         visited_id = {}
         previous_id = {}
 
+        # get id for start and goal
+        # if there is no corresponging id, exit
         if start not in self.title_to_id or goal not in self.title_to_id:
           print("Start or goal is not in page dictionary")
           exit(1)
         start_id = self.title_to_id[start]
         goal_id = self.title_to_id[goal]
 
+        # add to queue and make the start node visited
         queue.append(start_id)
         visited_id[start_id] = True
 
@@ -167,7 +170,8 @@ if __name__ == "__main__":
     # Example
     # wikipedia.find_most_linked_pages()
     # Homework #1
-    wikipedia.find_shortest_path("渋谷", "パレートの法則")
+    # wikipedia.find_shortest_path("渋谷", "パレートの法則")
+    wikipedia.find_shortest_path("渋谷", "池袋")
     # Homework #2
     #wikipedia.find_most_popular_pages()
     # Homework #3 (optional)
