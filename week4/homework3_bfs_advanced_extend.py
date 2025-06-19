@@ -114,7 +114,7 @@ class Wikipedia:
           previous_path = second_path
 
           # extend all the nodes that are next to each other
-          extended_path_to_all_nodes_next_to_each_other = self.extend_path(previous_path)
+          second_path = self.extend_path(previous_path)
 
           # if the extended path is longer than the orignial path, break the loop
           if len(second_path) <= len(previous_path):
@@ -194,7 +194,6 @@ class Wikipedia:
                 visited_id[node_id] = False
                 first_goal = False
                 continue
-
           for child_id in self.links[node_id]:
             if child_id not in visited_id or visited_id[child_id] == False:
               queue.append(child_id)
