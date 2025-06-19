@@ -99,10 +99,9 @@ class Wikipedia:
           exit(1)
         start_id = self.title_to_id[start]
         goal_id = self.title_to_id[goal]
-        second_path = self.find_long_path(start_id, goal_id)
 
         # 経路をどんどん長くする
-        second_path = self.find_long_path(start_id, goal_id)
+        second_path = self.find_long_path(start_id, goal_id, find_count=1)[0]
         print(second_path, len(second_path))
         extended_index = [(0, len(second_path) - 1)]
 
@@ -126,19 +125,20 @@ class Wikipedia:
       # 後ろから順に隣接する二つのパスを延長する、それを追加したときに、延長したパスに重複がなければ、元のパスと置き換える。
       start_id = self.title_to_id[path[start_index]]
       goal_id = self.title_to_id[path[end_index]]
-      extended_path = self.find_long_path(start_id, goal_id)
+      extended_paths = self.find_long_path(start_id, goal_id)
 
-      if end_index == len(path) - 1:
-        combined = path[:-2] + extended_path
-      else:
-        combined = path[: start_index] + extended_path + path[end_index + 1:]
+      for extended_path in extended_paths:
+        if end_index == len(path) - 1:
+          combined = path[:-2] + extended_path
+        else:
+          combined = path[: start_index] + extended_path + path[end_index + 1:]
 
-      # もし重複がなければ、元のパスと置き換える、もしあれば、置き換えず続行
-      if len(combined) == len(set(combined)):
-        print("not duplicate")
-        new_extended_index.append((len(path) - 1 - end_index, len(path) - 1 - end_index + len(extended_path) - 1))
-        print(combined)
-        return combined
+        # もし重複がなければ、元のパスと置き換える、もしあれば、置き換えず続行
+        if len(combined) == len(set(combined)):
+          print("not duplicate")
+          new_extended_index.append((len(path) - 1 - end_index, len(path) - 1 - end_index + len(extended_path) - 1))
+          print(combined)
+          return combined
       return path
 
     # 見つけたパスを後ろから順に二つの隣同士のパスをさらに延長する
@@ -171,7 +171,7 @@ class Wikipedia:
       return path, new_extended_index
 
     # startとgoalが直接繋がっていると仮定した時に、直接ではないもう一つのパスを返す関数
-    def find_long_path(self, start_id, goal_id):
+    def find_long_path(self, start_id, goal_id, find_count = 5):
 
       # use bfs
         queue = deque()
@@ -180,7 +180,10 @@ class Wikipedia:
 
         queue.append(start_id)
         visited_id[start_id] = True
-        first_goal = True
+
+        count = 0
+
+        paths = []
 
         print("finding longer path" , self.titles[start_id], self.titles[goal_id])
 
@@ -191,13 +194,15 @@ class Wikipedia:
               path = self.find_path(goal_id, previous_id)
 
               # 最初に見つけたパスでない時にパスを返す
-              if first_goal == False:
-                return path
+              if count  == find_count:
+                paths.append(path)
+                return paths
               # 最初に見つけたパスの時は、goalを一旦visitedからはずし、
               # 探索を再開する
               else:
-                first_goal = False
                 visited_id[node_id] = False
+                paths.append(path)
+                count += 1
                 continue
           for child_id in self.links[node_id]:
             if child_id not in visited_id or visited_id[child_id] == False:
@@ -205,7 +210,8 @@ class Wikipedia:
               previous_id[child_id] = node_id
 
         path = self.find_path(goal_id, previous_id)
-        return path
+        paths.append(path)
+        return paths
 
 
 
