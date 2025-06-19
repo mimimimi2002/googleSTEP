@@ -146,4 +146,4 @@ def extend_path(self, path):
 
 ```
 
-We successfully extend the path and still the loop goes on and now the length of the long path is 70359.
+We successfully extend the path and the length of the long path is 141741.
