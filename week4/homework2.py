@@ -16,7 +16,7 @@ class Wikipedia:
         # A mapping from the page title to a page ID (integer).
         # For example, self.titles["渋谷"] returns its ID.
         self.title_to_id = {}
-        
+
         # A mapping from the page ID to its page ranks
         self.id_to_page_ranks = {}
 
@@ -50,6 +50,7 @@ class Wikipedia:
                 self.links[src].append(dst)
         print("Finished reading %s" % links_file)
 
+        # add to id with no children
         for id, link in self.links.items():
           if len(link) == 0:
             self.id_with_no_children.append(id)
@@ -60,6 +61,7 @@ class Wikipedia:
 
         print()
 
+    # calculate variation between old page ranks and new page ranks
     def calculate_variation(self, old_page_ranks, new_page_ranks):
       if len(old_page_ranks) != len(new_page_ranks):
         print("Old page ranks and new page ranks have different length")
@@ -77,19 +79,20 @@ class Wikipedia:
     def calculate_page_ranks (self, p = 0.85):
       while True:
 
-        # set old page ranks and empty new page ranks
+        # set old page ranks and new page ranks with 0 to all ids.
         old_page_ranks = self.id_to_page_ranks
         new_page_ranks = {}
+        for id in old_page_ranks.keys():
+          new_page_ranks[id] = 0.0
 
         distribute_to_all_page_ranks = 0
+
+        # distribute the page rank of the nodes with no children to all
         for id in self.id_with_no_children:
           distribute_to_all_page_ranks += old_page_ranks[id] / len(old_page_ranks)
 
         for id, old_page_rank in old_page_ranks.items():
-          if id not in new_page_ranks:
-            new_page_ranks[id] = 0
-
-          # if there is no children, not distribute but remains in the same node
+          # if there is no children, skip
           if len(self.links[id]) == 0:
             continue
 
@@ -97,18 +100,18 @@ class Wikipedia:
           distribute_ratio = 1 / len(self.links[id])
 
           # add the distributed rank to its children
-          # only add to 85% of children
+          # only add 85% of old page ranks
           for child_id in self.links[id]:
-            if child_id not in new_page_ranks:
-              new_page_ranks[child_id] = 0
             new_page_ranks[child_id] += old_page_rank * distribute_ratio * p
 
+          # distribute to all for 15% of all old_page ranks
           distribute_to_all_page_ranks += old_page_ranks[id] * (1 - p) / len(old_page_ranks)
 
         for id, new_page_rank in new_page_ranks.items():
           new_page_ranks[id] += distribute_to_all_page_ranks
+
         # if the variation difference is small enough, then break
-        if self.calculate_variation(old_page_ranks, new_page_ranks) < 0.01:
+        if self.calculate_variation(old_page_ranks, new_page_ranks) <= 0.01:
           break
 
         # renew the page ranks
@@ -120,8 +123,9 @@ class Wikipedia:
           total += page_ranks
         print("total", total)
 
-      sorted_ids = sorted(self.id_to_page_ranks, key=lambda x: self.id_to_page_ranks[x], reverse=True)
-      return sorted_ids
+      # sort by the page ranks in descending order
+      ids_sorted_by_page_ranks = sorted(self.id_to_page_ranks, key=lambda x: self.id_to_page_ranks[x], reverse=True)
+      return ids_sorted_by_page_ranks
 
     # Example: Find the longest titles.
     def find_longest_titles(self):
@@ -208,7 +212,7 @@ class Wikipedia:
       if len(self.ids_sorted_by_popularity) < 10:
         numbers_page = len(self.ids_sorted_by_popularity)
       for i in range(numbers_page):
-        print(self.titles[self.ids_sorted_by_popularity[i]])
+        print(self.titles[self.ids_sorted_by_popularity[i]], self.id_to_page_ranks[self.ids_sorted_by_popularity[i]])
 
 
     # Homework #3 (optional):
