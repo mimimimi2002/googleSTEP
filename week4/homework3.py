@@ -162,6 +162,10 @@ class Wikipedia:
           path = combined
           print(combined)
           print("combined length: ", len(combined))
+
+          with open("homework3_answer.txt", "w") as f:
+            for item in combined:
+                f.write(f"{item}\n")
         index -= 1
 
       return path
