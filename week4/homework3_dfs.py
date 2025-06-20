@@ -126,8 +126,6 @@ class Wikipedia:
         # if it still has duplicate node, do not extend
         # if there is duplicate node, extend it
         if len(combined) == len(set(combined)):
-          print("not duplicate")
-          print(combined)
           print("combined length: ", len(combined))
           path = combined
 
@@ -135,7 +133,6 @@ class Wikipedia:
               with open("homework3_answer.txt", "w") as f:
                   for item in combined:
                       f.write(f"{item}\n")
-              print("File updated successfully.")
           except Exception as e:
               print("Failed to write file:", e)
         index -= 1
