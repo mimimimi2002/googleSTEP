@@ -122,6 +122,9 @@ class Wikipedia:
           print("longest")
           print(" -> ".join(second_path))
           print("length: ", len(second_path))
+      print("answer")
+      print(" -> ".join(second_path))
+      print("length: ", len(second_path))
 
 
     # extend the path from back, compare two nodes from back and extend them
