@@ -137,6 +137,13 @@ class Wikipedia:
           path = combined
           print(combined)
           print("combined length: ", len(combined))
+          try:
+              with open("homework3_answer.txt", "w") as f:
+                  for item in combined:
+                      f.write(f"{item}\n")
+              print("File updated successfully.")
+          except Exception as e:
+              print("Failed to write file:", e)
         index -= 1
 
       return path
