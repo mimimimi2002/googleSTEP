@@ -8,8 +8,10 @@
 | homework1_answer.py   | The output of homework1.py path for each file   | |
 | homework2.py          | Main code for homework2                         |python homework2.py pages_file links_file|
 | homework2_answer.py   | The output of homework2 for each file           | |
-| homework3.py          | Main codeforhomework3                           |python homework3.py pages_file links_file|
+| homework3.py          | Main code for homework3                           |python homework3.py pages_file links_file|
 | homework3_answer.py   | The middle of output of homework3.py            | |
+| homework3_bfs.py          | Use BFS to extend the path in homework3.    | |
+| homework3_dfs.py          | Use DFS to extend the path in homework3.    | |
 | dfs_with_stack_in_the_recursion_order.py| Code for DFS using stack to replicate recursion order         | python  dfs_with_stack_in_the_recursion_order.py |
 
 # Homework1
