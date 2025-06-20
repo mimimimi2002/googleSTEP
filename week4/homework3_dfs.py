@@ -178,6 +178,9 @@ class Wikipedia:
         path = self.find_path(goal_id, previous_id)
         return path
 
+    # use dfs to find the path other than direct path from start to goal
+    # you can also put visited_id to the all nodes in the current path, make sure
+    # this returns the path that is not overlapped with current path or the direct path.
     def dfs(self, start_id, goal_id, visited_id = {}):
       previous_id = {}
       stack = [start_id]
@@ -196,6 +199,9 @@ class Wikipedia:
 
           for child_id in reversed(self.links.get(current_id, [])):
               if not visited_id.get(child_id, False):
+
+                  # if start_id has goal_id as neighbor, skip it and pretend there is no path from
+                  # start to goal
                   if current_id == start_id and child_id == goal_id:
                     continue
                   previous_id[child_id] = current_id
@@ -204,6 +210,8 @@ class Wikipedia:
       if goal_id in previous_id:
         path = self.find_path(goal_id, previous_id)
         return path
+
+      # if only direct path exists, return direct path
       else :
         print("Not found")
         return [self.titles[start_id], self.titles[goal_id]]
