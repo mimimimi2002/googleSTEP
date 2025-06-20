@@ -8,10 +8,9 @@
 | homework1_answer.py   | The output of homework1.py path for each file   | |
 | homework2.py          | Main code for homework2                         |python homework2.py pages_file links_file|
 | homework2_answer.py   | The output of homework2 for each file           | |
-| homework3.py          | Main code for homework3                           |python homework3.py pages_file links_file|
 | homework3_answer.py   | The middle of output of homework3.py            | |
-| homework3_bfs.py          | Use BFS to extend the path in homework3.    | |
-| homework3_dfs.py          | Use DFS to extend the path in homework3.    | |
+| homework3_bfs.py          | Use BFS to extend the path in homework3.    | python homework3_bfs.py pages_file links_file|
+| homework3_dfs.py          | Use DFS to extend the path in homework3.    | python homework3_dfs.py pages_file links_file|
 | dfs_with_stack_in_the_recursion_order.py| Code for DFS using stack to replicate recursion order         | python  dfs_with_stack_in_the_recursion_order.py |
 
 # Homework1
@@ -149,3 +148,64 @@ def extend_path(self, path):
 ```
 
 We successfully extend the path and the length of the long path is 141741.
+
+## We used BFS but what if DFS?
+We think that use BFS to return the seconde shortest path which is guaranteed to be longer or the same length as the direct path, but it takes much time to process. Also DFS does not guarantee that it can 
+find the other path but has possibility to find the direct path as the first answer.
+
+However, considering that DFS takes less time when it comes to search all the nodes, we can have advanced DFS to avoid finding the direct path if possible. When pushing the neighbors that are not visited to stack, if the node is start and the neighbor is goal, we can skip pushing the goal and pretend that there is no path for direct path, if we search all the nodes and still cannot find the other path, return direct path.
+
+```
+# use dfs to find the path other than direct path from start to goal
+# you can also put visited_id to the all nodes in the current path, make sure
+# this returns the path that is not overlapped with current path or the direct path.
+def dfs(self, start_id, goal_id, visited_id = {}):
+  previous_id = {}
+  stack = [start_id]
+
+  while stack:
+      current_id = stack.pop()
+
+      if visited_id.get(current_id, False):
+          continue
+
+      visited_id[current_id] = True
+
+      if current_id == goal_id:
+          path = self.find_path(goal_id, previous_id)
+          return path
+
+      for child_id in reversed(self.links.get(current_id, [])):
+          if not visited_id.get(child_id, False):
+
+              # if start_id has goal_id as neighbor, skip it and pretend there is no path from
+              # start to goal
+              if current_id == start_id and child_id == goal_id:
+                continue
+              previous_id[child_id] = current_id
+              stack.append(child_id)
+
+  if goal_id in previous_id:
+    path = self.find_path(goal_id, previous_id)
+    return path
+
+  # if only direct path exists, return direct path
+  else :
+    print("Not found")
+    return [self.titles[start_id], self.titles[goal_id]]
+
+```
+
+Here is the part to skip the direct path.
+
+```
+if not visited_id.get(child_id, False):
+
+              # if start_id has goal_id as neighbor, skip it and pretend there is no path from
+              # start to goal
+              if current_id == start_id and child_id == goal_id:
+                continue
+```
+
+The speed to find other path becomes way faster and now the loop still goes on.
+Now the length is 287884.
