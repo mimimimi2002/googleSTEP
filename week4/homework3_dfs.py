@@ -116,7 +116,7 @@ class Wikipedia:
         print(index-1, index)
 
         # use the visited id, it will return the path that will not duplicate the current path.
-        extended_path = self.find_long_path(start_id, goal_id, visited_id)
+        extended_path = self.dfs(start_id, goal_id, visited_id)
 
         if index == len(path) - 1:
           combined = path[:-2] + extended_path
@@ -181,9 +181,8 @@ class Wikipedia:
         path = self.find_path(goal_id, previous_id)
         return path
 
-    def dfs(self, start_id, goal_id):
+    def dfs(self, start_id, goal_id, visited_id = {}):
       previous_id = {}
-      visited_id = {}
       stack = [start_id]
 
       while stack:
@@ -200,6 +199,8 @@ class Wikipedia:
 
           for child_id in reversed(self.links.get(current_id, [])):
               if not visited_id.get(child_id, False):
+                  if current_id == start_id and child_id == goal_id:
+                    continue
                   previous_id[child_id] = current_id
                   stack.append(child_id)
 
@@ -208,7 +209,7 @@ class Wikipedia:
         return path
       else :
         print("Not found")
-        exit()
+        return [self.titles[start_id], self.titles[goal_id]]
 
 
 
