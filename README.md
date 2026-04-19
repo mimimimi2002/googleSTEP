@@ -1,1 +1,1 @@
-This is the homework of Google STEP program. Please visit the ReadMe of every week's homework.
+This is homework from the Google STEP program. Please refer to the README for each week's assignment.
